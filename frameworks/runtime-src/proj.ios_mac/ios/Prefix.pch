@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'No-Escape' target in the 'No-Escape' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+	#import <UIKit/UIKit.h>
+#endif
