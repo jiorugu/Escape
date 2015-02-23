@@ -44,7 +44,7 @@ var LevelLayer = cc.Layer.extend({
 				var sequenceAction = cc.Sequence(
 						cc.callFunc((function() {that.isMoving = true;}), this),
 						spawnAction,
-						cc.callFunc(function(){that.isMoving = false; that.occupied = false;}), this);
+						cc.callFunc(function(){that.mapLayer.setViewPointCenter(that.mapLayer.player.getPosition());that.isMoving = false; that.occupied = false;}), this);
 				this.mapLayer.player.stopAllActions();
 				this.mapLayer.player.runAction(sequenceAction);	
 			} else {

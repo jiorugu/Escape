@@ -2,8 +2,7 @@ var MapLayer = cc.Layer.extend({
 	ctor : function() {
 		this._super();
 		this.initTileMap();
-		var size = cc.director.getWinSize();
-		//this.setPosition(size.width / 2, size.height / 2);
+	
 		this.scheduleUpdate();
 		var that = this;
 		
@@ -46,23 +45,32 @@ var MapLayer = cc.Layer.extend({
 	},
 
 	initTileMap : function() {	
-		this.tileMap = new TileMap(res.map1);
+		this.tileMap = new TileMap(res.map2);
 		this.addChild(this.tileMap, -1);
 
 		var objectGroup = this.tileMap.getObjectGroup("objectLayer");
 		var spawnPos = objectGroup.getObject("Spawn");
 		this.initPlayer(spawnPos);
+		this.setViewPointCenter(this.player.getPosition());
 	},
 	
 	initPlayer : function(spawnPos) {
 		this.player = new Player();
 		this.player.setPosition(spawnPos.x, spawnPos.y);
-		//this.setPosition(this.player.getPosition().x, this.player.getPosition().y);
 		this.addChild(this.player, 2);
 	},
 	
 	initControlLayer : function() {
 		this.controlLayer = new ControlLayer();
 		this.addChild(this.controlLayer, 5);
+	},
+	
+	setViewPointCenter : function(position) {
+		var winSize = cc.director.getWinSize();
+	
+		var centerOfView = cc.p(winSize.width / 2, winSize.height / 2);
+		var viewPoint = cc.pSub(centerOfView, position);
+		cc.log(viewPoint.x +" "+viewPoint.y);
+		this.setPosition(viewPoint);
 	}
 });

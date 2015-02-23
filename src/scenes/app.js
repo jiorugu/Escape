@@ -1,4 +1,4 @@
-animationTime = 3;
+animationTime = 0.3;
 
 var HelloWorldScene = cc.Scene.extend({
     onEnter:function () {
