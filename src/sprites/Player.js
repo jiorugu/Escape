@@ -3,8 +3,8 @@ var Player = cc.Sprite.extend({
 		this._super();
 		this.initWithFile("#player_down0.png");
 		this.setAnchorPoint(0, 0);
-		this.animationDown = this.initAnimation("down");
-		this.runAction(this.animationDown);
+		cc.spriteFrameCache.addSpriteFrames(res.player_plist);
+		this.setSpriteFrame("player_down0");
 	},
 	
 	initAnimation : function(direction) {
@@ -16,7 +16,12 @@ var Player = cc.Sprite.extend({
 			animFrames.push(frame);
 		}
 
-		var animation = new cc.Animation(animFrames, 3, Math.round(animationTime / 3));
-		return new cc.Animate(animation);
+		var animation = new cc.Animation(animFrames, animationTime);
+		return new cc.RepeatForever(new cc.Animate(animation));
+	},
+	
+	setFrameIdle : function(direction) {
+		this.stopAllActions();
+		this.setSpriteFrame("player_"+direction+"0");
 	}
 });

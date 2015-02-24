@@ -147,7 +147,7 @@
                 <key>sourceSize</key>
                 <string>{16,16}</string>
             </dict>
-            <key>player_up2.png</key>
+            <key>player_up2</key>
             <dict>
                 <key>frame</key>
                 <string>{{32,48},{16,16}}</string>

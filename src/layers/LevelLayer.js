@@ -8,6 +8,8 @@ var LevelLayer = cc.Layer.extend({
 		
 		this.isMoving = false;
 		this.curDestination;
+		this.curDirection;
+		
 		this.scheduleUpdate();
 	},
 
@@ -21,31 +23,41 @@ var LevelLayer = cc.Layer.extend({
 	},
 	
 	checkForNewDestination : function() {
+		var directionChanged = true;
+		
 		//Get current direction from DPAD 
-		var curDirection = this.hudLayer.controlLayer.currDirection;
+		if(this.hudLayer.controlLayer.currDirection == this.curDirection) {
+			directionChanged = false;
+		} else {
+			this.curDirection = this.hudLayer.controlLayer.currDirection;
+		}
 
-		if(curDirection != "idle") {
+		if(this.curDirection != "idle") {
 			//Get X and Y coordinates
 			var directionPoint = new cc.p(0,0);
 			var tileSize = this.mapLayer.tileMap.getTileSize(); 
 			
-			if(curDirection == "up") {
+			if(this.curDirection == "up") {
 				directionPoint = cc.p(0,tileSize.height);
-			} else if(curDirection == "down") {
+			} else if(this.curDirection == "down") {
 				directionPoint = cc.p(0,-tileSize.height);
-			} else if(curDirection == "left") {
+			} else if(this.curDirection == "left") {
 				directionPoint = cc.p(-tileSize.width, 0);
-			} else if(curDirection == "right") {
+			} else if(this.curDirection == "right") {
 				directionPoint = cc.p(tileSize.width, 0);
 			}
+			
+			var animation = this.mapLayer.player.initAnimation(this.curDirection);
+			if(directionChanged) {
+				this.mapLayer.player.runAction(animation);
+			}
+			
 			this.curDestination = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
 			this.isMoving = true;
 		}
 	},
 	
-	movePlayerToDestination : function() {
-		//TODO Playeranimation
-		//var animation = this.mapLayer.player.initAnimation(curDirection);
+	movePlayerToDestination : function() {		
 		var dest = this.curDestination;
 		var tileMap = this.mapLayer.tileMap;
 		var playerPos = this.mapLayer.player.getPosition();
@@ -66,6 +78,9 @@ var LevelLayer = cc.Layer.extend({
 		this.mapLayer.setViewPointCenter(cc.pMult(this.mapLayer.player.getPosition(), this.mapLayer.getScale()));
 
 		if(this.checkIfPointsAreEqual(playerPos, dest)) { 
+			if(this.hudLayer.controlLayer.currDirection != this.curDirection) {
+				this.mapLayer.player.setFrameIdle(this.curDirection);
+			} 
 			this.isMoving = false;
 		}		
 	},
