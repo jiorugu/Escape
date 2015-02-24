@@ -1,8 +1,10 @@
 var MapLayer = cc.Layer.extend({
 	ctor : function() {
 		this._super();
+		
+		this.setScale(2);
 		this.initTileMap();
-	
+
 		this.scheduleUpdate();
 		var that = this;
 		
@@ -45,13 +47,13 @@ var MapLayer = cc.Layer.extend({
 	},
 
 	initTileMap : function() {	
-		this.tileMap = new TileMap(res.map2);
+		this.tileMap = new TileMap(res.map1);
 		this.addChild(this.tileMap, -1);
 
 		var objectGroup = this.tileMap.getObjectGroup("objectLayer");
 		var spawnPos = objectGroup.getObject("Spawn");
 		this.initPlayer(spawnPos);
-		this.setViewPointCenter(this.player.getPosition());
+		this.setViewPointCenter(cc.pMult(this.player.getPosition(), this.getScale()));
 	},
 	
 	initPlayer : function(spawnPos) {
@@ -65,12 +67,11 @@ var MapLayer = cc.Layer.extend({
 		this.addChild(this.controlLayer, 5);
 	},
 	
-	setViewPointCenter : function(position) {
+	setViewPointCenter : function(pos) {
 		var winSize = cc.director.getWinSize();
 	
-		var centerOfView = cc.p(winSize.width / 2, winSize.height / 2);
-		var viewPoint = cc.pSub(centerOfView, position);
-		cc.log(viewPoint.x +" "+viewPoint.y);
+		var centerOfView = cc.p((winSize.width * this.getScale()) / 2, (winSize.height * this.getScale()) / 2);
+		var viewPoint = cc.pSub(centerOfView, pos);
 		this.setPosition(viewPoint);
 	}
 });

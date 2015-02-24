@@ -15,7 +15,7 @@ var Player = cc.Sprite.extend({
 			var frame = cc.spriteFrameCache.getSpriteFrame(str);
 			animFrames.push(frame);
 		}
-		cc.log(Math.round(animationTime / 0.1));
+
 		var animation = new cc.Animation(animFrames, 3, Math.round(animationTime / 3));
 		return new cc.Animate(animation);
 	}
