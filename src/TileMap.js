@@ -4,17 +4,29 @@ var TileMap = cc.TMXTiledMap.extend({
 		this.initWithTMXFile(mapFile);
 	},
 
-	getTileCoordForPos : function(position) {
-		var x = Math.floor(position.x / this.getTileSize().width);
-		var y = Math.floor(((this.getTileSize().height * 
-				this.getMapSize().height) - position.y) 
-				/ this.getTileSize().height);
+	getTileCoordForPos : function(pos) {
+		var x = Math.floor(pos.x / this.getTileSize().width);
+		//subtract by 1 -> workaround for cocos2d offset problem
+		var y = Math.floor((((this.getTileSize().height * 
+				this.getMapSize().height) - pos.y) 
+				/ this.getTileSize().height) - 1);
 		return new cc.p(x, y);
 	},
-
-	isCollidable : function(tileCoord) {
-		//TODO: collision detection
-		return false;
-	},
 	
+	isCollidable : function(gid) {
+		if (gid) {
+			var layer = this.getLayer("ground");
+			var gidGroundLayer = layer.getTileGIDAt(gid);
+			var groundProperties = this.getPropertiesForGID(gidGroundLayer);
+			
+			//check for collide property
+			if (groundProperties) {
+				//TODO: rename walkable to collidable
+				if(groundProperties.walkable) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 });

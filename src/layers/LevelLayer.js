@@ -52,8 +52,17 @@ var LevelLayer = cc.Layer.extend({
 				this.mapLayer.player.runAction(animation);
 			}
 			
-			this.curDestination = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
-			this.isMoving = true;
+			var newPos = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
+			
+			//Collision Detection
+			var tileChoord = this.mapLayer.tileMap.getTileCoordForPos(newPos);
+			if(this.mapLayer.tileMap.isCollidable(tileChoord)) {
+				this.mapLayer.player.setFrameIdle(this.curDirection);
+				this.isMoving = false;
+			} else {
+				this.curDestination = newPos;
+				this.isMoving = true;
+			}
 		}
 	},
 	

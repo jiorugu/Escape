@@ -75,7 +75,7 @@
  </tileset>
  <layer name="ground" width="14" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYGBgYAFiRiIwGwMCgPTwALEQEZgLST8zDjUg87iBmB9qPrIcMx59nFjcwUCEPj4sYsj6uKDuxaZXAIc4M9QMfHrR/cwIdT8Dkl5C8YCsHgAiQAS2
+   eJyN0eEKwCAIBOCLYrCKNvb+DzsDoSOsDO6P+YkRACRJcOTCON1UyedIJh8XPX1ekTw6n+/ixt3GHnC4ZtTYZd3Xsq9Rq+pwsPObg1qQPf0D9/8fcASw
   </data>
  </layer>
  <layer name="layer2" width="14" height="8">
@@ -84,7 +84,7 @@
   </data>
  </layer>
  <objectgroup name="objectLayer" width="14" height="8">
-  <object name="Spawn" x="80" y="32" width="16" height="16"/>
+  <object name="spawn" x="80" y="32" width="16" height="16"/>
   <object name="rock" x="64" y="80" width="16" height="15"/>
  </objectgroup>
 </map>

@@ -50,10 +50,18 @@ var MapLayer = cc.Layer.extend({
 		this.tileMap = new TileMap(res.map1);
 		this.addChild(this.tileMap, -1);
 
+		this.initLayers();
+		
 		var objectGroup = this.tileMap.getObjectGroup("objectLayer");
-		var spawnPos = objectGroup.getObject("Spawn");
+		var spawnPos = objectGroup.getObject("spawn");
 		this.initPlayer(spawnPos);
 		this.setViewPointCenter(cc.pMult(this.player.getPosition(), this.getScale()));
+	},
+	
+	initLayers : function() {
+		this.layerGround = this.tileMap.getLayer("ground");
+		this.layerEvent = this.tileMap.getLayer("layer2");
+		this.layerObjects = this.tileMap.getLayer("objectLayer");
 	},
 	
 	initPlayer : function(spawnPos) {
