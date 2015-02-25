@@ -17,6 +17,16 @@
     <property name="walkable" value="false"/>
    </properties>
   </tile>
+  <tile id="3">
+   <properties>
+    <property name="walkable" value="false"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="walkable" value="false"/>
+   </properties>
+  </tile>
   <tile id="5">
    <properties>
     <property name="walkable" value="false"/>
@@ -75,7 +85,7 @@
  </tileset>
  <layer name="ground" width="14" height="8">
   <data encoding="base64" compression="zlib">
-   eJyN0eEKwCAIBOCLYrCKNvb+DzsDoSOsDO6P+YkRACRJcOTCON1UyedIJh8XPX1ekTw6n+/ixt3GHnC4ZtTYZd3Xsq9Rq+pwsPObg1qQPf0D9/8fcASw
+   eJxjYGBgYAFiRiIwGwMCgPTwALEQEZgLST8zDjUg87iBmB9qPrIcMx59nFjcwUCEPj4sYsj6uKDuxaZXAIc4M9QMfHrR/cwIdT8Dkl5C8YCsHgAiQAS2
   </data>
  </layer>
  <layer name="layer2" width="14" height="8">

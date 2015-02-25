@@ -6,14 +6,15 @@ var TileMap = cc.TMXTiledMap.extend({
 
 	getTileCoordForPos : function(pos) {
 		var x = Math.floor(pos.x / this.getTileSize().width);
-		//subtract by 1 -> workaround for cocos2d offset problem
-		var y = Math.floor((((this.getTileSize().height * 
+		var y = Math.floor(((this.getTileSize().height * 
 				this.getMapSize().height) - pos.y) 
-				/ this.getTileSize().height) - 1);
-		return new cc.p(x, y);
+				/ this.getTileSize().height);
+		//subtract by 1 -> workaround for cocos2d offset problem
+		return new cc.p(x, y-1);
 	},
 	
 	isCollidable : function(gid) {
+		cc.log(gid.x +" "+gid.y);
 		if (gid) {
 			var layer = this.getLayer("ground");
 			var gidGroundLayer = layer.getTileGIDAt(gid);
