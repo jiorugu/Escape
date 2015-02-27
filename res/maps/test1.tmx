@@ -82,13 +82,18 @@
     <property name="portal" value=""/>
    </properties>
   </tile>
+  <tile id="26">
+   <properties>
+    <property name="event" value="trampoline"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="ground" width="14" height="8">
   <data encoding="base64" compression="zlib">
    eJxjYGBgYAFiRiIwGwMCgPTwALEQEZgLST8zDjUg87iBmB9qPrIcMx59nFjcwUCEPj4sYsj6uKDuxaZXAIc4M9QMfHrR/cwIdT8Dkl5C8YCsHgAiQAS2
   </data>
  </layer>
- <layer name="layer2" width="14" height="8">
+ <layer name="events" width="14" height="8">
   <data encoding="base64" compression="zlib">
    eJxjYBg4IIhDXJYIveI4xKWBWASIJdHExdDUwIAwkpgMEfbicoMUiXqpBQAI5wE6
   </data>

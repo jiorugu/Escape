@@ -29,5 +29,22 @@ var TileMap = cc.TMXTiledMap.extend({
 			}
 		}
 		return false;
+	},
+	
+	getEventOnGid : function(gid) {
+		if (gid) {
+			var layer = this.getLayer("events");
+			var gidEventLayer = layer.getTileGIDAt(gid);
+			var eventProperties = this.getPropertiesForGID(gidEventLayer);
+
+			//check for collide property
+			if (eventProperties) {
+				//TODO: rename walkable to collidable
+				if(eventProperties.event) {
+					return eventProperties.event;
+				}
+			}
+		}
+		return "noevent";
 	}
 });

@@ -4,11 +4,11 @@ var ControlLayer = cc.Layer.extend({
 		var size = cc.director.getWinSize();
 		this.scheduleUpdate();
 		this.initDPad();
-		this.currDirection = "idle";
+		this.curDirection = "idle";
 	},
 	
 	buttonPressed : function(direction) {
-		this.currDirection = direction;
+		this.curDirection = direction;
 	},
 
 	initDPad : function() {	
