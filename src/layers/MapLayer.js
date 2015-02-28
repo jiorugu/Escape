@@ -52,16 +52,18 @@ var MapLayer = cc.Layer.extend({
 
 		this.initLayers();
 		
-		var objectGroup = this.tileMap.getObjectGroup("objectLayer");
+		var objectGroup = this.tileMap.getObjectGroup("objects");
 		var spawnPos = objectGroup.getObject("spawn");
-		this.initPlayer(spawnPos);
+		var centeredPos = this.tileMap.centerPosition(spawnPos);
+			
+		this.initPlayer(centeredPos);
 		this.setViewPointCenter(cc.pMult(this.player.getPosition(), this.getScale()));
 	},
 	
 	initLayers : function() {
 		this.layerGround = this.tileMap.getLayer("ground");
-		this.layerEvent = this.tileMap.getLayer("layer2");
-		this.layerObjects = this.tileMap.getLayer("objectLayer");
+		this.layerEvent = this.tileMap.getLayer("events");
+		this.layerObjects = this.tileMap.getLayer("objects");
 	},
 	
 	initPlayer : function(spawnPos) {

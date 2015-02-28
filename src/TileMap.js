@@ -14,7 +14,6 @@ var TileMap = cc.TMXTiledMap.extend({
 	},
 	
 	isCollidable : function(gid) {
-		cc.log(gid.x +" "+gid.y);
 		if (gid) {
 			var layer = this.getLayer("ground");
 			var gidGroundLayer = layer.getTileGIDAt(gid);
@@ -23,7 +22,7 @@ var TileMap = cc.TMXTiledMap.extend({
 			//check for collide property
 			if (groundProperties) {
 				//TODO: rename walkable to collidable
-				if(groundProperties.walkable) {
+				if(groundProperties.colliding) {
 					return true;
 				}
 			}
@@ -46,5 +45,11 @@ var TileMap = cc.TMXTiledMap.extend({
 			}
 		}
 		return "noevent";
+	},
+	
+	centerPosition : function(pos) {
+		var centeredX = Math.round(pos.x / this.getTileSize().width) * this.getTileSize().width;
+		var centeredY = Math.round(pos.y/ this.getTileSize().height) * this.getTileSize().height;
+		return cc.p(centeredX, centeredY);	
 	}
 });

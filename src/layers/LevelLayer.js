@@ -103,13 +103,11 @@ var LevelLayer = cc.Layer.extend({
 			if(this.hudLayer.controlLayer.curDirection != this.curDirection) {
 				this.mapLayer.player.setFrameIdle(this.curDirection);
 			} 
-			cc.log("noevent");
 			//Player is neither walking or running an action
 			this.isWalking = false;
 			this.isMoving = false;
 		}
 		else {
-			cc.log("event: "+event);
 			//Player ended walking and starts action
 			this.isWalking = false;
 			this.isMoving = true;
@@ -130,6 +128,7 @@ var LevelLayer = cc.Layer.extend({
 			case "trampoline":
 				this.runTrampolineEvent();
 				break;
+			default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
 		}
 	},
 	
