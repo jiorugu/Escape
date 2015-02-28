@@ -22,34 +22,28 @@ var LevelLayer = cc.Layer.extend({
 			this.walkPlayerToDestination();
 		}
 		else if(this.isMoving == false){
-			this.checkForNewDestination();
+			this.checkForNewDestination(this.checkIfDirectionChanged());
 		}
 	},
 	
-	checkForNewDestination : function() {
-		var directionChanged = true;
-		
-		//Get current direction from DPAD 
+	checkIfDirectionChanged : function() {
+		var directionChanged;
 		if(this.hudLayer.controlLayer.curDirection == this.curDirection) {
 			directionChanged = false;
 		} else {
+			directionChanged = true;
 			this.curDirection = this.hudLayer.controlLayer.curDirection;
 		}
+		
+		return directionChanged;
+	},
+	
+	checkForNewDestination : function(didDirectionChange) {
+		var directionChanged = didDirectionChange;
 
 		if(this.curDirection != "idle") {
 			//Get X and Y coordinates
-			var directionPoint = new cc.p(0,0);
-			var tileSize = this.mapLayer.tileMap.getTileSize(); 
-			
-			if(this.curDirection == "up") {
-				directionPoint = cc.p(0,tileSize.height);
-			} else if(this.curDirection == "down") {
-				directionPoint = cc.p(0,-tileSize.height);
-			} else if(this.curDirection == "left") {
-				directionPoint = cc.p(-tileSize.width, 0);
-			} else if(this.curDirection == "right") {
-				directionPoint = cc.p(tileSize.width, 0);
-			}
+			var directionPoint = this.getNextTileForCurrentDirection();
 			
 			var animation = this.mapLayer.player.initAnimation(this.curDirection);
 			if(directionChanged) {
@@ -63,9 +57,11 @@ var LevelLayer = cc.Layer.extend({
 			if(this.mapLayer.tileMap.isCollidable(tileCoord)) {
 				this.mapLayer.player.setFrameIdle(this.curDirection);
 				this.isWalking = false;
+				this.isMoving = false;
 			} else {
 				this.curDestination = newPos;
 				this.isWalking = true;
+				this.isMoving = false;
 			}
 		}
 	},
@@ -122,11 +118,31 @@ var LevelLayer = cc.Layer.extend({
 			return false;
 	},
 	
+	getNextTileForCurrentDirection : function() {
+		var tileSize = this.mapLayer.tileMap.getTileSize(); 
+		var directionPoint;
+		
+		if(this.curDirection == "up") {
+			directionPoint = cc.p(0,tileSize.height);
+		} else if(this.curDirection == "down") {
+			directionPoint = cc.p(0,-tileSize.height);
+		} else if(this.curDirection == "left") {
+			directionPoint = cc.p(-tileSize.width, 0);
+		} else if(this.curDirection == "right") {
+			directionPoint = cc.p(tileSize.width, 0);
+		}
+		
+		return directionPoint;
+	},
+	
 	
 	runEvent : function(event) {
 		switch(event) {
 			case "trampoline":
 				this.runTrampolineEvent();
+				break;
+			case "ice":
+				this.runIceEvent();
 				break;
 			default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
 		}
@@ -151,6 +167,10 @@ var LevelLayer = cc.Layer.extend({
 		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this, destination));
 		this.mapLayer.player.runAction(sequence);
 		this.mapLayer.runAction(moveMapAction);
+	},
+	
+	runIceEvent : function() {
+		this.checkForNewDestination(false);
 	}
 	
 });
