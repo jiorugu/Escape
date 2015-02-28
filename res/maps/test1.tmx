@@ -215,6 +215,11 @@
     <property name="colliding" value="true"/>
    </properties>
   </tile>
+  <tile id="58">
+   <properties>
+    <property name="colliding" value="true"/>
+   </properties>
+  </tile>
   <tile id="59">
    <properties>
     <property name="event" value="crumbly"/>

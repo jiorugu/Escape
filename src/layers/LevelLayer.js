@@ -146,7 +146,8 @@ var LevelLayer = cc.Layer.extend({
 		}
 		var destination = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
 		var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
-		var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*2, -directionPoint.y*2);
+		var scale = this.mapLayer.getScale();
+		var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
 		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this, destination));
 		this.mapLayer.player.runAction(sequence);
 		this.mapLayer.runAction(moveMapAction);
