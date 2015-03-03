@@ -11,7 +11,8 @@ var res = {
     arrowDown : "res/arrowDown.png",
     arrowUp : "res/arrowUp.png",
     arrowPressed : "res/arrowPressed.png",
-    map1 : "res/maps/test1.tmx"
+    map1 : "res/maps/test1.tmx",
+    mapIce : "res/maps/test2.tmx"
 };
 
 var g_resources = [];

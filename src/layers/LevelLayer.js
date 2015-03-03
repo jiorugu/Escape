@@ -8,6 +8,8 @@ var LevelLayer = cc.Layer.extend({
 		
 		//general player movement(walking + eventactions)
 		this.isMoving = false;
+		//if true -> player moves until event or collision(arrow tiles)
+		this.keepMoving = false;
 		
 		//player walking
 		this.isWalking = false;
@@ -44,9 +46,10 @@ var LevelLayer = cc.Layer.extend({
 		if(this.curDirection != "idle") {
 			//Get X and Y coordinates
 			var directionPoint = this.getNextTileForCurrentDirection();
-			
+		
 			var animation = this.mapLayer.player.initAnimation(this.curDirection);
 			if(directionChanged) {
+				this.mapLayer.player.stopAllActions();
 				this.mapLayer.player.runAction(animation);
 			}
 			
@@ -54,10 +57,13 @@ var LevelLayer = cc.Layer.extend({
 			
 			//Collision Detection
 			var tileCoord = this.mapLayer.tileMap.getTileCoordForPos(newPos);
+			
+			//colides
 			if(this.mapLayer.tileMap.isCollidable(tileCoord)) {
 				this.mapLayer.player.setFrameIdle(this.curDirection);
 				this.isWalking = false;
 				this.isMoving = false;
+				this.keepMoving = false;
 			} else {
 				this.curDestination = newPos;
 				this.isWalking = true;
@@ -86,6 +92,7 @@ var LevelLayer = cc.Layer.extend({
 		this.mapLayer.player.setPosition(playerPos);
 		this.mapLayer.setViewPointCenter(cc.pMult(this.mapLayer.player.getPosition(), this.mapLayer.getScale()));
 
+		//check if palyer reached it's destination(next tile)
 		if(this.checkIfPointsAreEqual(playerPos, dest)) { 
 			this.endMoving(dest);
 		}		
@@ -96,17 +103,22 @@ var LevelLayer = cc.Layer.extend({
 		var event = this.mapLayer.tileMap.getEventOnGid(gid);
 		
 		if(event == "noevent") {
-			if(this.hudLayer.controlLayer.curDirection != this.curDirection) {
-				this.mapLayer.player.setFrameIdle(this.curDirection);
-			} 
-			//Player is neither walking or running an action
-			this.isWalking = false;
-			this.isMoving = false;
+			if(this.keepMoving) {
+				this.checkForNewDestination(false);
+			} else {
+				if(this.hudLayer.controlLayer.curDirection != this.curDirection) {
+					this.mapLayer.player.setFrameIdle(this.curDirection);
+				} 
+				//Player is neither walking or running an action
+				this.isWalking = false;
+				this.isMoving = false;
+			}
 		}
 		else {
 			//Player ended walking and starts action
 			this.isWalking = false;
 			this.isMoving = true;
+			this.keepMoving = false;
 			this.runEvent(event);
 		}
 	},
@@ -144,6 +156,9 @@ var LevelLayer = cc.Layer.extend({
 			case "ice":
 				this.runIceEvent();
 				break;
+			case "arrow":
+				this.runArrowEvent();
+				break;
 			default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
 		}
 	},
@@ -170,7 +185,19 @@ var LevelLayer = cc.Layer.extend({
 	},
 	
 	runIceEvent : function() {
+		//move player
 		this.checkForNewDestination(false);
+	},
+	
+	runArrowEvent : function() {
+		this.keepMoving = true;
+		
+		//get direction
+		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
+		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnGid(gid); 
+		
+		//move player
+		this.checkForNewDestination(true);
 	}
 	
 });
