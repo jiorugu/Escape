@@ -94,12 +94,12 @@ var LevelLayer = cc.Layer.extend({
 
 		//check if palyer reached it's destination(next tile)
 		if(this.checkIfPointsAreEqual(playerPos, dest)) { 
-			this.endMoving(dest);
+			this.endMoving();
 		}		
 	},
 	
-	endMoving : function(dest) {
-		var gid = this.mapLayer.tileMap.getTileCoordForPos(dest);
+	endMoving : function() {
+		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
 		var event = this.mapLayer.tileMap.getEventOnGid(gid);
 		
 		if(event == "noevent") {
@@ -175,11 +175,11 @@ var LevelLayer = cc.Layer.extend({
 		} else if(this.curDirection == "right") {
 			directionPoint = cc.p(playerSize.width * 2, 0);
 		}
-		var destination = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
+		this.curDestination = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
 		var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
 		var scale = this.mapLayer.getScale();
 		var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
-		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this, destination));
+		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this));
 		this.mapLayer.player.runAction(sequence);
 		this.mapLayer.runAction(moveMapAction);
 	},
@@ -195,7 +195,7 @@ var LevelLayer = cc.Layer.extend({
 		//get direction
 		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
 		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnGid(gid); 
-		
+
 		//move player
 		this.checkForNewDestination(true);
 	}
