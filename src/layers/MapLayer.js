@@ -4,6 +4,7 @@ var MapLayer = cc.Layer.extend({
 		
 		this.setScale(2);
 		this.initTileMap();
+		this.initObjects();
 
 		this.scheduleUpdate();
 		var that = this;
@@ -70,6 +71,40 @@ var MapLayer = cc.Layer.extend({
 		this.player = new Player();
 		this.player.setPosition(spawnPos.x, spawnPos.y);
 		this.addChild(this.player, 2);
+	},
+	
+	initObjects : function() {
+		var objectGroup = this.tileMap.getObjectGroup("objects");
+		var objects = objectGroup.getObjects();
+		
+		//get Portals
+		for (var i = 0; i < objects.length; i++) {
+			if(objects[i].name == "portal") {
+				var position = cc.p(objects[i].x, objects[i].y);
+				//Start Portal Animation
+				this.startPortalAnimation(position);
+			}
+		}
+	},
+	
+	startPortalAnimation : function(position) {
+		cc.spriteFrameCache.addSpriteFrames(res.portal_plist);
+		var animFrames = [];
+		for (var i = 0; i < 3; i++) {
+			var str = "portal" + i;
+			var frame = cc.spriteFrameCache.getSpriteFrame(str);
+			animFrames.push(frame);
+		}
+
+		var animation = new cc.Animation(animFrames, animationTime);
+		var repeatAnimation = cc.RepeatForever(new cc.Animate(animation));
+		
+		//get Sprite for GID
+		var portalSprite = cc.Sprite();
+		portalSprite.setSpriteFrame("portal0");
+		portalSprite.setPosition(position);
+		this.tileMap.addChild(portalSprite, 1);
+		portalSprite.runAction(repeatAnimation);
 	},
 	
 	initControlLayer : function() {

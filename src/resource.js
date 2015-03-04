@@ -6,6 +6,8 @@ var res = {
     playerDown0 : "res/player/player_down0.png",
     player_png : "res/player/player.png",
     player_plist : "res/player/player.plist",
+    portal_png : "res/animations/portal.png",
+    portal_plist : "res/animations/portal.plist",
     arrowLeft : "res/arrowLeft.png",
     arrowRight : "res/arrowRight.png",
     arrowDown : "res/arrowDown.png",

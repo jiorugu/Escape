@@ -18,6 +18,7 @@ var LevelLayer = cc.Layer.extend({
 		
 		this.scheduleUpdate();
 	},
+	
 
 	update : function(dt) {
 		if(this.isWalking) {
