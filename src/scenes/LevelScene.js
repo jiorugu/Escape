@@ -1,7 +1,7 @@
 var LevelScene = cc.Scene.extend({
-	ctor: function() {
+	ctor: function(mapFile) {
 		this._super();
-		this.levelLayer = new LevelLayer();
+		this.levelLayer = new LevelLayer(mapFile);
 		this.addChild(this.levelLayer);
 	}
 });

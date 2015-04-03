@@ -205,6 +205,11 @@
     <property name="colliding" value="true"/>
    </properties>
   </tile>
+  <tile id="53">
+   <properties>
+    <property name="event" value="portal"/>
+   </properties>
+  </tile>
   <tile id="56">
    <properties>
     <property name="colliding" value="true"/>
@@ -238,18 +243,18 @@
  </layer>
  <layer name="events" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPmEBpGSjNgketMppaYoEKlJZGYlMDCOOwi1p2aFPJHGRAidt4oLQ0lOam0C3IAAB9TgHT
+   eJxjYCAPmEBpGSjNgketMppaYoEKlJZGYlMDCOOwC4TNqGC+Ng5xSsymxP88UFoaSnNTYBY6AADqJgI/
   </data>
  </layer>
  <objectgroup name="objects" width="0" height="0">
   <object name="spawn" x="80" y="16" width="20" height="18"/>
   <object name="rock" x="151" y="136"/>
-  <object name="portal" x="124" y="120">
+  <object name="portal" x="112" y="112" width="20" height="19">
    <properties>
     <property name="tag" value="0"/>
    </properties>
   </object>
-  <object name="portal" x="136" y="88">
+  <object name="portal" x="128" y="80" width="19" height="18">
    <properties>
     <property name="tag" value="0"/>
    </properties>

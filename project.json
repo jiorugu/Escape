@@ -12,13 +12,15 @@
   "jsList": [
     "src/resource.js",
     "src/scenes/app.js",
+    "src/layers/ControlLayer.js",
+    "src/layers/HUDLayer.js",
+    "src/layers/LevelLayer.js",
+    "src/layers/LevelMenuLayer.js",
     "src/layers/MainMenuLayer.js",
     "src/layers/MapLayer.js",
-    "src/layers/LevelLayer.js",
-    "src/layers/HUDLayer.js",
-    "src/layers/ControlLayer.js",
-    "src/TileMap.js",
+    "src/scenes/LevelMenuScene.js",
+    "src/scenes/LevelScene.js",
     "src/sprites/Player.js",
-    "src/scenes/LevelScene.js"
+    "src/TileMap.js"
   ]
 }

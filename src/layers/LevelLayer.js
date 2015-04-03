@@ -1,7 +1,7 @@
 var LevelLayer = cc.Layer.extend({
-	ctor : function() {
+	ctor : function(mapFile) {
 		this._super();
-		this.mapLayer = new MapLayer();
+		this.mapLayer = new MapLayer(mapFile);
 		this.hudLayer = new HUDLayer();
 		this.addChild(this.mapLayer, 0);
 		this.addChild(this.hudLayer, 10);
@@ -18,7 +18,6 @@ var LevelLayer = cc.Layer.extend({
 		
 		this.scheduleUpdate();
 	},
-	
 
 	update : function(dt) {
 		if(this.isWalking) {
@@ -73,7 +72,7 @@ var LevelLayer = cc.Layer.extend({
 		}
 	},
 	
-	walkPlayerToDestination : function() {		
+	walkPlayerToDestination : function() {
 		var dest = this.curDestination;
 		var tileMap = this.mapLayer.tileMap;
 		var playerPos = this.mapLayer.player.getPosition();
@@ -148,7 +147,12 @@ var LevelLayer = cc.Layer.extend({
 		return directionPoint;
 	},
 	
+	setPlayerPos : function(pos) {
+		this.mapLayer.player.setPosition(pos.x, pos.y);
+		return; 
+	},
 	
+	//Special Tile Event Handling
 	runEvent : function(event) {
 		switch(event) {
 			case "trampoline":
@@ -159,6 +163,9 @@ var LevelLayer = cc.Layer.extend({
 				break;
 			case "arrow":
 				this.runArrowEvent();
+				break;
+			case "portal":
+				this.runPortalEvent();
 				break;
 			default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
 		}
@@ -199,6 +206,19 @@ var LevelLayer = cc.Layer.extend({
 
 		//move player
 		this.checkForNewDestination(true);
-	}
+	},
 	
+	runPortalEvent : function() {
+		var portalTag = this.mapLayer.getPortalTagOnPosition(this.curDestination);
+		var newPos = this.mapLayer.getPortalPositionWithTag(portalTag, this.curDestination);
+		this.curDestination = newPos;
+		this.mapLayer.player.setPosition(newPos);
+		var fadeOutAction = cc.fadeOut(0.2);
+		var moveToAction = cc.moveTo(1, newPos);
+		var fadeInAction = cc.fadeIn(0.2);
+		var sequence = cc.Sequence(fadeOutAction, moveToAction, fadeInAction, new cc.CallFunc(this.checkForNewDestination(false), this));
+		this.mapLayer.player.runAction(sequence);	
+		
+		//this.mapLayer.setViewPointCenter(this.curDestination);
+	}
 });

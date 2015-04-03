@@ -2,7 +2,6 @@ var ControlLayer = cc.Layer.extend({
 	ctor : function() {
 		this._super();
 		var size = cc.director.getWinSize();
-		this.scheduleUpdate();
 		this.initDPad();
 		this.curDirection = "idle";
 	},
@@ -13,6 +12,7 @@ var ControlLayer = cc.Layer.extend({
 
 	initDPad : function() {	
 		var that = this;
+		//TODO: change to relative positions
 		
 		//BUTTON UP
 		var upButton = ccui.Button();

@@ -1,12 +1,13 @@
 var MapLayer = cc.Layer.extend({
-	ctor : function() {
+	ctor : function(mapFile) {
 		this._super();
 		
+		this.portals = [];
+		
 		this.setScale(2);
-		this.initTileMap();
+		this.initTileMap(mapFile);
 		this.initObjects();
 
-		this.scheduleUpdate();
 		var that = this;
 		
 		//TOUCH LISTENER
@@ -43,12 +44,8 @@ var MapLayer = cc.Layer.extend({
 		}, this);
 	},
 
-	update : function(dt) {
-
-	},
-
-	initTileMap : function() {	
-		this.tileMap = new TileMap(res.map1);
+	initTileMap : function(mapFile) {	
+		this.tileMap = new TileMap(mapFile);
 		this.addChild(this.tileMap, -1);
 
 		this.initLayers();
@@ -81,8 +78,10 @@ var MapLayer = cc.Layer.extend({
 		for (var i = 0; i < objects.length; i++) {
 			if(objects[i].name == "portal") {
 				var position = cc.p(objects[i].x, objects[i].y);
+				var centerPosition = this.tileMap.centerPosition(position);
+				this.portals.push({"tag":objects[i].tag, "pos":centerPosition});
 				//Start Portal Animation
-				this.startPortalAnimation(position);
+				this.startPortalAnimation(centerPosition);
 			}
 		}
 	},
@@ -101,10 +100,30 @@ var MapLayer = cc.Layer.extend({
 		
 		//get Sprite for GID
 		var portalSprite = cc.Sprite();
+		portalSprite.setAnchorPoint(0, 0);
 		portalSprite.setSpriteFrame("portal0");
 		portalSprite.setPosition(position);
 		this.tileMap.addChild(portalSprite, 1);
 		portalSprite.runAction(repeatAnimation);
+	},
+	
+	getPortalTagOnPosition : function(position) {
+		for(var i = 0; i < this.portals.length; i++) {
+			var curPortalPos = this.portals[i];
+			if(position.x == this.portals[i].pos.x && position.y == this.portals[i].pos.y) {
+				return this.portals[i].tag;
+			}
+		}
+	},
+	
+	getPortalPositionWithTag : function(tag, position) {
+		for(var i = 0; i < this.portals.length; i++) {
+			if(this.portals[i].tag == tag) {
+				if(position.x != this.portals[i].pos.x || position.y != this.portals[i].pos.y) {	
+					return this.portals[i].pos;
+				}
+			}
+		}
 	},
 	
 	initControlLayer : function() {
