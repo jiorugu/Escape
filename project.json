@@ -18,8 +18,10 @@
     "src/layers/LevelMenuLayer.js",
     "src/layers/MainMenuLayer.js",
     "src/layers/MapLayer.js",
+    "src/layers/PauseLayer.js",
     "src/scenes/LevelMenuScene.js",
     "src/scenes/LevelScene.js",
+    "src/scenes/PauseScene.js",
     "src/sprites/Player.js",
     "src/TileMap.js"
   ]

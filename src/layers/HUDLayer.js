@@ -8,7 +8,8 @@ var HUDLayer = cc.Layer.extend({
 	},
 	
 	initPauseMenu : function() {
-		var pauseButtonPos = cc.p(cc.winSize.width, cc.winSize.height);
+		//TODO: change to relative position
+		var pauseButtonPos = cc.p(cc.winSize.width - 50, cc.winSize.height - 50);
 		
 		var pauseButton = ccui.Button();
 		cc.log(pauseButton.height);
@@ -22,7 +23,10 @@ var HUDLayer = cc.Layer.extend({
 });
 
 var openPauseMenu = function(sender, type) {
-	//TODO: add pause menu, activate only on touch began
-	if(type == 0)
-		cc.log("pause: "+type);
+	//TODO: Add layer instead of replace + use transparency
+	
+	//activate only on touch began
+	if(type == 0) {
+		cc.director.pushScene(new PauseScene());
+	}
 }
