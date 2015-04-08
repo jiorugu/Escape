@@ -243,7 +243,7 @@
  </layer>
  <layer name="events" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPmEBpGSjNgketMppaYoEKlJZGYlMDCOOwC4TNqGC+Ng5xSsymxP88UFoaSnNTYBY6AADqJgI/
+   eJxjYCAPmEBpGSjNgketMppaEDDDox4mpwKlpZHY1ADCWMRUoBifu4gF2jjEKTGbEv/zQGlpKM1NgVnoAACkrQKr
   </data>
  </layer>
  <objectgroup name="objects" width="0" height="0">
@@ -260,5 +260,15 @@
    </properties>
   </object>
   <object name="rock" x="38" y="73"/>
+  <object name="portal" x="96" y="32" width="16" height="16">
+   <properties>
+    <property name="tag" value="1"/>
+   </properties>
+  </object>
+  <object name="portal" x="16" y="48" width="16" height="16">
+   <properties>
+    <property name="tag" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

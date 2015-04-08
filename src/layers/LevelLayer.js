@@ -5,17 +5,17 @@ var LevelLayer = cc.Layer.extend({
 		this.hudLayer = new HUDLayer();
 		this.addChild(this.mapLayer, 0);
 		this.addChild(this.hudLayer, 10);
-		
+
 		//general player movement(walking + eventactions)
 		this.isMoving = false;
 		//if true -> player moves until event or collision(arrow tiles)
 		this.keepMoving = false;
-		
+
 		//player walking
 		this.isWalking = false;
 		this.curDestination;
 		this.curDirection;
-		
+
 		this.scheduleUpdate();
 	},
 
@@ -27,7 +27,7 @@ var LevelLayer = cc.Layer.extend({
 			this.checkForNewDestination(this.checkIfDirectionChanged());
 		}
 	},
-	
+
 	checkIfDirectionChanged : function() {
 		var directionChanged;
 		if(this.hudLayer.controlLayer.curDirection == this.curDirection) {
@@ -36,25 +36,24 @@ var LevelLayer = cc.Layer.extend({
 			directionChanged = true;
 			this.curDirection = this.hudLayer.controlLayer.curDirection;
 		}
-		
+
 		return directionChanged;
 	},
-	
+
 	checkForNewDestination : function(didDirectionChange) {
 		var directionChanged = didDirectionChange;
-
+		
 		if(this.curDirection != "idle") {
 			//Get X and Y coordinates
 			var directionPoint = this.getNextTileForCurrentDirection();
-		
+
 			var animation = this.mapLayer.player.initAnimation(this.curDirection);
 			if(directionChanged) {
 				this.mapLayer.player.stopAllActions();
 				this.mapLayer.player.runAction(animation);
 			}
-			
+
 			var newPos = cc.pAdd(this.mapLayer.player.getPosition(), directionPoint);
-			
 			//Collision Detection
 			var tileCoord = this.mapLayer.tileMap.getTileCoordForPos(newPos);
 			
@@ -71,12 +70,12 @@ var LevelLayer = cc.Layer.extend({
 			}
 		}
 	},
-	
+
 	walkPlayerToDestination : function() {
 		var dest = this.curDestination;
 		var tileMap = this.mapLayer.tileMap;
 		var playerPos = this.mapLayer.player.getPosition();
-		
+
 		//X COORD
 		if (dest.x < playerPos.x) {
 			playerPos.x --; 
@@ -88,7 +87,7 @@ var LevelLayer = cc.Layer.extend({
 		} else if (dest.y > playerPos.y) {
 			playerPos.y ++;
 		}
-		
+
 		this.mapLayer.player.setPosition(playerPos);
 		this.mapLayer.setViewPointCenter(cc.pMult(this.mapLayer.player.getPosition(), this.mapLayer.getScale()));
 
@@ -97,11 +96,11 @@ var LevelLayer = cc.Layer.extend({
 			this.endMoving();
 		}		
 	},
-	
+
 	endMoving : function() {
 		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
 		var event = this.mapLayer.tileMap.getEventOnGid(gid);
-		
+
 		if(event == "noevent") {
 			if(this.keepMoving) {
 				this.checkForNewDestination(false);
@@ -122,18 +121,18 @@ var LevelLayer = cc.Layer.extend({
 			this.runEvent(event);
 		}
 	},
-	
+
 	checkIfPointsAreEqual: function(point1, point2) {
 		if(point1.x == point2.x && point1.y == point2.y)
 			return true;
 		else
 			return false;
 	},
-	
+
 	getNextTileForCurrentDirection : function() {
 		var tileSize = this.mapLayer.tileMap.getTileSize(); 
 		var directionPoint;
-		
+
 		if(this.curDirection == "up") {
 			directionPoint = cc.p(0,tileSize.height);
 		} else if(this.curDirection == "down") {
@@ -143,34 +142,29 @@ var LevelLayer = cc.Layer.extend({
 		} else if(this.curDirection == "right") {
 			directionPoint = cc.p(tileSize.width, 0);
 		}
-		
+
 		return directionPoint;
 	},
-	
-	setPlayerPos : function(pos) {
-		this.mapLayer.player.setPosition(pos.x, pos.y);
-		return; 
-	},
-	
+
 	//Special Tile Event Handling
 	runEvent : function(event) {
 		switch(event) {
-			case "trampoline":
-				this.runTrampolineEvent();
-				break;
-			case "ice":
-				this.runIceEvent();
-				break;
-			case "arrow":
-				this.runArrowEvent();
-				break;
-			case "portal":
-				this.runPortalEvent();
-				break;
-			default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
+		case "trampoline":
+			this.runTrampolineEvent();
+			break;
+		case "ice":
+			this.runIceEvent();
+			break;
+		case "arrow":
+			this.runArrowEvent();
+			break;
+		case "portal":
+			this.runPortalEvent();
+			break;
+		default : this.isWalking = false; this.isMoving = false; this.mapLayer.player.setFrameIdle(this.curDirection);
 		}
 	},
-	
+
 	runTrampolineEvent : function() {
 		var playerSize = this.mapLayer.player.getContentSize();
 
@@ -191,15 +185,15 @@ var LevelLayer = cc.Layer.extend({
 		this.mapLayer.player.runAction(sequence);
 		this.mapLayer.runAction(moveMapAction);
 	},
-	
+
 	runIceEvent : function() {
 		//move player
 		this.checkForNewDestination(false);
 	},
-	
+
 	runArrowEvent : function() {
 		this.keepMoving = true;
-		
+
 		//get direction
 		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
 		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnGid(gid); 
@@ -207,18 +201,45 @@ var LevelLayer = cc.Layer.extend({
 		//move player
 		this.checkForNewDestination(true);
 	},
-	
+
 	runPortalEvent : function() {
 		var portalTag = this.mapLayer.getPortalTagOnPosition(this.curDestination);
 		var newPos = this.mapLayer.getPortalPositionWithTag(portalTag, this.curDestination);
-		this.curDestination = newPos;
-		this.mapLayer.player.setPosition(newPos);
-		var fadeOutAction = cc.fadeOut(0.2);
-		var moveToAction = cc.moveTo(1, newPos);
-		var fadeInAction = cc.fadeIn(0.2);
-		var sequence = cc.Sequence(fadeOutAction, moveToAction, fadeInAction, new cc.CallFunc(this.checkForNewDestination(false), this));
-		this.mapLayer.player.runAction(sequence);	
+		var eventDirection = this.curDirection;
+
+		var fadeOutAction = cc.fadeOut(0.2);	
+
+		var callMoveMapFunc = cc.CallFunc.create(this.moveMapPortalSequence, this, {"newPos": newPos, "oldPos":this.curDestination, "direction":eventDirection});
+
+		var sequence = cc.Sequence(fadeOutAction, callMoveMapFunc);
+		this.mapLayer.player.runAction(sequence);
+	},
+	
+	moveMapPortalSequence : function(target, data) {
+		var oldPos = cc.pMult(data.oldPos, this.mapLayer.getScale());
+		var newPos = cc.pMult(data.newPos, this.mapLayer.getScale());
+		//TODO: rename variable
+		var difference = cc.pSub(oldPos, newPos);
 		
-		//this.mapLayer.setViewPointCenter(this.curDestination);
+		var moveByAction = cc.moveBy(0.4, difference);
+		var callEndPortalSequenceFunc = cc.CallFunc.create(this.endPortalSequence, this, data.direction);
+		var sequence = cc.Sequence(moveByAction, callEndPortalSequenceFunc);
+		
+		//set player movement and current position
+		this.curDirection = data.direction;
+		var directionPoint = this.getNextTileForCurrentDirection();
+		this.curDestination = cc.pAdd(newPos, directionPoint);
+		this.mapLayer.player.setPosition(data.newPos);
+		this.mapLayer.runAction(sequence);
+	},
+	
+	endPortalSequence: function(target, data) {
+		var fadeInAction = cc.fadeIn(0.2);
+		var checkForNewDestinationFunc = cc.CallFunc(this.checkForNewDestination(false), this);
+		var sequence = cc.Sequence(fadeInAction,checkForNewDestinationFunc);
+		
+		//set the direction in which the player entered
+		this.curDirection = data;
+		this.mapLayer.player.runAction(sequence);
 	}
 });

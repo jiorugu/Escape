@@ -4,7 +4,7 @@ var MapLayer = cc.Layer.extend({
 		
 		this.portals = [];
 		
-		this.setScale(2);
+		//this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 
@@ -52,8 +52,8 @@ var MapLayer = cc.Layer.extend({
 		
 		var objectGroup = this.tileMap.getObjectGroup("objects");
 		var spawnPos = objectGroup.getObject("spawn");
-		var centeredPos = this.tileMap.centerPosition(spawnPos);
-			
+		
+		var centeredPos = this.tileMap.centerPosition(spawnPos);;
 		this.initPlayer(centeredPos);
 		this.setViewPointCenter(cc.pMult(this.player.getPosition(), this.getScale()));
 	},
@@ -78,6 +78,7 @@ var MapLayer = cc.Layer.extend({
 		for (var i = 0; i < objects.length; i++) {
 			if(objects[i].name == "portal") {
 				var position = cc.p(objects[i].x, objects[i].y);
+				cc.log(position.x + " y:"+position.y);
 				var centerPosition = this.tileMap.centerPosition(position);
 				this.portals.push({"tag":objects[i].tag, "pos":centerPosition});
 				//Start Portal Animation
@@ -132,10 +133,14 @@ var MapLayer = cc.Layer.extend({
 	},
 	
 	setViewPointCenter : function(pos) {
-		var winSize = cc.director.getWinSize();
-	
-		var centerOfView = cc.p((winSize.width * this.getScale()) / 2, (winSize.height * this.getScale()) / 2);
+		var centerOfView = this.getViewPointCenter();
 		var viewPoint = cc.pSub(centerOfView, pos);
 		this.setPosition(viewPoint);
+	},
+	
+	getViewPointCenter : function() {
+		var winSize = cc.director.getWinSize();
+		var centerOfView = cc.p((winSize.width * this.getScale()) / 2, (winSize.height * this.getScale()) / 2);
+		return centerOfView;
 	}
 });
