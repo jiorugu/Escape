@@ -63,7 +63,7 @@ var LevelLayer = cc.Layer.extend({
 			//Collision Detection
 			var tileCoord = this.mapLayer.tileMap.getTileCoordForPos(newPos);
 			
-			if(this.mapLayer.tileMap.isCollidable(tileCoord) || this.isCollidingWithPlayer(newPos)) {
+			if(this.mapLayer.tileMap.isCollidable(tileCoord) || this.specialBoulderCollision(newPos)) {
 				this.spriteCollided();
 			} else if(this.mapLayer.collidesWithBoulder(newPos)) {
 				if(this.activeSprite == this.mapLayer.player) {
@@ -133,10 +133,18 @@ var LevelLayer = cc.Layer.extend({
 		}
 	},
 	
-	isCollidingWithPlayer : function(pos) {
+	specialBoulderCollision : function(pos) {
 		if(this.activeSprite != this.mapLayer.player) {
+			//Colliding with player
 			var playerPos = this.mapLayer.player.getPosition();
 			if(playerPos.x == pos.x && playerPos.y == pos.y) {
+				return true;
+			}
+			
+			//Colliding with trampoline
+			var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
+			var event = this.mapLayer.tileMap.getEventOnGid(gid);
+			if(event == "trampoline") {
 				return true;
 			}
 		}
@@ -144,7 +152,6 @@ var LevelLayer = cc.Layer.extend({
 	},
 	
 	spriteCollided : function() {
-		cc.log("collided" + this.activeSprite);
 		this.activeSprite.setFrameIdle(this.curDirection);
 		//reset active sprite to player
 		this.activeSprite = this.mapLayer.player;
