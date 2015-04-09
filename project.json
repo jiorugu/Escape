@@ -23,6 +23,7 @@
     "src/scenes/LevelScene.js",
     "src/scenes/PauseScene.js",
     "src/sprites/Player.js",
+    "src/sprites/Boulder.js",
     "src/TileMap.js"
   ]
 }

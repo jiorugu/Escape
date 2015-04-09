@@ -248,18 +248,18 @@
  </layer>
  <objectgroup name="objects" width="0" height="0">
   <object name="spawn" x="80" y="16" width="20" height="18"/>
-  <object name="rock" x="151" y="136"/>
+  <object name="rock" x="144" y="128" width="19" height="18"/>
   <object name="portal" x="112" y="112" width="20" height="19">
    <properties>
     <property name="tag" value="0"/>
    </properties>
   </object>
-  <object name="portal" x="128" y="80" width="19" height="18">
+  <object name="portal" x="128" y="80" width="16" height="16">
    <properties>
     <property name="tag" value="0"/>
    </properties>
   </object>
-  <object name="rock" x="38" y="73"/>
+  <object name="rock" x="32" y="64" width="17" height="17"/>
   <object name="portal" x="96" y="32" width="16" height="16">
    <properties>
     <property name="tag" value="1"/>

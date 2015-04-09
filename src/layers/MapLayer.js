@@ -3,6 +3,7 @@ var MapLayer = cc.Layer.extend({
 		this._super();
 		
 		this.portals = [];
+		this.boulders = [];
 		
 		//this.setScale(2);
 		this.initTileMap(mapFile);
@@ -64,6 +65,11 @@ var MapLayer = cc.Layer.extend({
 		this.layerObjects = this.tileMap.getLayer("objects");
 	},
 	
+	initControlLayer : function() {
+		this.controlLayer = new ControlLayer();
+		this.addChild(this.controlLayer, 5);
+	},
+	
 	initPlayer : function(spawnPos) {
 		this.player = new Player();
 		this.player.setPosition(spawnPos.x, spawnPos.y);
@@ -77,21 +83,37 @@ var MapLayer = cc.Layer.extend({
 		//get Portals
 		for (var i = 0; i < objects.length; i++) {
 			if(objects[i].name == "portal") {
-				var position = cc.p(objects[i].x, objects[i].y);
-				cc.log(position.x + " y:"+position.y);
-				var centerPosition = this.tileMap.centerPosition(position);
-				this.portals.push({"tag":objects[i].tag, "pos":centerPosition});
-				//Start Portal Animation
-				this.startPortalAnimation(centerPosition);
+				this.initPortal(objects[i]);
+			} else if(objects[i].name == "rock") {
+				//TODO: change rock to boulder everywhere
+				this.initBoulder(objects[i]);
 			}
 		}
 	},
 	
-	startPortalAnimation : function(position) {
+	initPortal : function(portal) {
+		var position = cc.p(portal.x, portal.y);
+		var centerPosition = this.tileMap.centerPosition(position);
+		this.portals.push({"tag":portal.tag, "pos":centerPosition});
+		//Start Portal Animation
+		this.initPortalAnimation(centerPosition);
+	},
+	
+	initBoulder : function(boulder) {
+		var position = cc.p(boulder.x, boulder.y);
+		var centerPosition = this.tileMap.centerPosition(position);
+		
+		var boulder = new Boulder(centerPosition.x, centerPosition.y);
+		this.tileMap.addChild(boulder, 1);
+		this.boulders.push(boulder);
+	},
+	
+	initPortalAnimation : function(position) {
+		//TODO: make own Portal Sprite class
 		cc.spriteFrameCache.addSpriteFrames(res.portal_plist);
 		var animFrames = [];
 		for (var i = 0; i < 3; i++) {
-			var str = "portal" + i;
+			var str = "portal_" + i;
 			var frame = cc.spriteFrameCache.getSpriteFrame(str);
 			animFrames.push(frame);
 		}
@@ -102,7 +124,7 @@ var MapLayer = cc.Layer.extend({
 		//get Sprite for GID
 		var portalSprite = cc.Sprite();
 		portalSprite.setAnchorPoint(0, 0);
-		portalSprite.setSpriteFrame("portal0");
+		portalSprite.setSpriteFrame("portal_0");
 		portalSprite.setPosition(position);
 		this.tileMap.addChild(portalSprite, 1);
 		portalSprite.runAction(repeatAnimation);
@@ -127,9 +149,24 @@ var MapLayer = cc.Layer.extend({
 		}
 	},
 	
-	initControlLayer : function() {
-		this.controlLayer = new ControlLayer();
-		this.addChild(this.controlLayer, 5);
+	collidesWithBoulder : function(pos) {
+		for(var i = 0; i < this.boulders.length; i++) {
+			var boulderPos = this.boulders[i].getPosition();
+			if(pos.x == boulderPos.x && pos.y == boulderPos.y) {
+				return true;
+			}
+		}
+		return false;
+	},
+	
+	getBoulderAtPos : function(pos) {
+		for(var i = 0; i < this.boulders.length; i++) {
+			var boulderPos = this.boulders[i].getPosition();
+			if(pos.x == boulderPos.x && pos.y == boulderPos.y) {
+				return this.boulders[i];
+			}
+		}
+		return null;
 	},
 	
 	setViewPointCenter : function(pos) {

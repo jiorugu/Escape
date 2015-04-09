@@ -5,6 +5,8 @@ var res = {
     player_plist : "res/player/player.plist",
     portal_png : "res/animations/portal.png",
     portal_plist : "res/animations/portal.plist",
+    boulder_png : "res/animations/boulder.png",
+    boulder_plist : "res/animations/boulder.plist",
     arrowLeft : "res/gui/arrowLeft.png",
     arrowRight : "res/gui/arrowRight.png",
     arrowDown : "res/gui/arrowDown.png",
@@ -13,7 +15,7 @@ var res = {
     pauseButton : "res/gui/pauseButton.png",
     map1 : "res/maps/test1.tmx",
     map2 : "res/maps/test2.tmx",
-    map3 : "res/maps/test3ice.tmx"
+    map3 : "res/maps/test-ice-rock.tmx",
 };
 
 var g_resources = [];
