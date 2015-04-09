@@ -64,12 +64,12 @@ var LevelLayer = cc.Layer.extend({
 			var tileCoord = this.mapLayer.tileMap.getTileCoordForPos(newPos);
 			
 			if(this.mapLayer.tileMap.isCollidable(tileCoord) || this.specialBoulderCollision(newPos)) {
-				this.spriteCollided();
+				this.spriteStopped();
 			} else if(this.mapLayer.collidesWithBoulder(newPos)) {
 				if(this.activeSprite == this.mapLayer.player) {
 					this.pushBoulder(newPos);
 				} else {
-					this.spriteCollided();
+					this.spriteStopped();
 				}
 			} else{
 				this.curDestination = newPos;
@@ -140,18 +140,11 @@ var LevelLayer = cc.Layer.extend({
 			if(playerPos.x == pos.x && playerPos.y == pos.y) {
 				return true;
 			}
-			
-			//Colliding with trampoline
-			var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
-			var event = this.mapLayer.tileMap.getEventOnGid(gid);
-			if(event == "trampoline") {
-				return true;
-			}
 		}
 		return false;
 	},
 	
-	spriteCollided : function() {
+	spriteStopped : function() {
 		this.activeSprite.setFrameIdle(this.curDirection);
 		//reset active sprite to player
 		this.activeSprite = this.mapLayer.player;
@@ -217,24 +210,28 @@ var LevelLayer = cc.Layer.extend({
 	},
 
 	runTrampolineEvent : function() {
-		var playerSize = this.activeSprite.getContentSize();
-
-		if(this.curDirection == "up") {
-			directionPoint = cc.p(0,playerSize.height * 2);
-		} else if(this.curDirection == "down") {
-			directionPoint = cc.p(0,-playerSize.height * 2);
-		} else if(this.curDirection == "left") {
-			directionPoint = cc.p(-playerSize.width * 2, 0);
-		} else if(this.curDirection == "right") {
-			directionPoint = cc.p(playerSize.width * 2, 0);
+		if(this.activeSprite == this.mapLayer.player) {
+			var playerSize = this.activeSprite.getContentSize();
+	
+			if(this.curDirection == "up") {
+				directionPoint = cc.p(0,playerSize.height * 2);
+			} else if(this.curDirection == "down") {
+				directionPoint = cc.p(0,-playerSize.height * 2);
+			} else if(this.curDirection == "left") {
+				directionPoint = cc.p(-playerSize.width * 2, 0);
+			} else if(this.curDirection == "right") {
+				directionPoint = cc.p(playerSize.width * 2, 0);
+			}
+			this.curDestination = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
+			var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
+			var scale = this.mapLayer.getScale();
+			var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
+			var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this));
+			this.activeSprite.runAction(sequence);
+			this.mapLayer.runAction(moveMapAction);
+		} else {
+			this.spriteStopped();
 		}
-		this.curDestination = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
-		var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
-		var scale = this.mapLayer.getScale();
-		var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
-		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this));
-		this.activeSprite.runAction(sequence);
-		this.mapLayer.runAction(moveMapAction);
 	},
 
 	runIceEvent : function() {
@@ -298,9 +295,9 @@ var LevelLayer = cc.Layer.extend({
 	runExitEvent : function() {
 		if(this.activeSprite == this.mapLayer.player) {
 			//DEBUG
-			this.spriteCollided();
+			this.spriteStopped();
 		} else {
-			this.spriteCollided();
+			this.spriteStopped();
 		}
 	}
 });
