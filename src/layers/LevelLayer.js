@@ -260,14 +260,21 @@ var LevelLayer = cc.Layer.extend({
 	runPortalEvent : function() {
 		var portalTag = this.mapLayer.getPortalTagOnPosition(this.curDestination);
 		var newPos = this.mapLayer.getPortalPositionWithTag(portalTag, this.curDestination);
-		var eventDirection = this.curDirection;
-
-		var fadeOutAction = cc.fadeOut(0.2);	
-		var callMoveMapFunc = cc.CallFunc.create(this.moveMapPortalSequence, this, {"newPos": newPos, "oldPos":this.curDestination, "direction":eventDirection});
-		var sequence = cc.Sequence(fadeOutAction, callMoveMapFunc);
 		
-		this.mapLayer.setViewPointCenter(cc.pMult(this.activeSprite.getPosition(), this.mapLayer.getScale()));
-		this.activeSprite.runAction(sequence);
+		//check if new position is occupied
+		if(!this.mapLayer.collidesWithBoulder(newPos)) {
+			var eventDirection = this.curDirection;
+	
+			var fadeOutAction = cc.fadeOut(0.2);	
+			var callMoveMapFunc = cc.CallFunc.create(this.moveMapPortalSequence, this, {"newPos": newPos, "oldPos":this.curDestination, "direction":eventDirection});
+			var sequence = cc.Sequence(fadeOutAction, callMoveMapFunc);
+			
+			this.mapLayer.setViewPointCenter(cc.pMult(this.activeSprite.getPosition(), this.mapLayer.getScale()));
+			this.activeSprite.runAction(sequence);
+		}
+		else {
+			this.spriteStopped();
+		}
 	},
 	
 	moveMapPortalSequence : function(target, data) {

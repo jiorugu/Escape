@@ -5,7 +5,7 @@ var MapLayer = cc.Layer.extend({
 		this.portals = [];
 		this.boulders = [];
 		
-		//this.setScale(2);
+		this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 
@@ -104,7 +104,7 @@ var MapLayer = cc.Layer.extend({
 		var centerPosition = this.tileMap.centerPosition(position);
 		
 		var boulder = new Boulder(centerPosition.x, centerPosition.y);
-		this.tileMap.addChild(boulder, 1);
+		this.tileMap.addChild(boulder, 2);
 		this.boulders.push(boulder);
 	},
 	
