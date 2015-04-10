@@ -282,10 +282,9 @@ var LevelLayer = cc.Layer.extend({
 	},
 	
 	endPortalSequence : function(target, data) {
-		//TODO: bug -> player stays invisible when instantly moving after action
 		var fadeInAction = cc.fadeIn(0.2);
-		var checkForNewDestinationFunc = cc.CallFunc(this.checkForNewDestination(false), this);
-		var sequence = cc.Sequence(fadeInAction,checkForNewDestinationFunc);
+		var checkForNewDestinationFunc = cc.CallFunc.create(this.checkForNewDestination, this, false);
+		var sequence = cc.Sequence(fadeInAction, checkForNewDestinationFunc);
 		
 		//set the direction in which the player entered
 		this.curDirection = data;
