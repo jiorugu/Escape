@@ -115,7 +115,9 @@ var LevelLayer = cc.Layer.extend({
 				this.checkForNewDestination(false);
 			} else {
 				//Player is neither walking or running an action
-				if(this.hudLayer.controlLayer.curDirection != this.curDirection) {
+				//If currently touched direction input equals sprites direction -> player keeps moving and don't stop animation.
+				//Automatically stop animation if sprite isn't player.
+				if(this.hudLayer.controlLayer.curDirection != this.curDirection || this.activeSprite != this.mapLayer.player) {
 					this.activeSprite.setFrameIdle(this.curDirection);
 				} 
 				//reset active sprite to player;
@@ -181,8 +183,13 @@ var LevelLayer = cc.Layer.extend({
 		//player pushed boulder -> change active sprite to boulder to move it
 		this.activeSprite.setFrameIdle(this.curDirection);
 		this.activeSprite = this.mapLayer.getBoulderAtPos(newPos);
+		
 		//set tile behind boulder as destination
 		this.curDestination = cc.pAdd(newPos, this.getNextTileForCurrentDirection());
+		
+		//keepMoving true would make the boulder move on after pushing it while being on the arrow event
+		this.keepMoving = false;
+		
 		//direction changed set to true to start boulder animation
 		this.checkForNewDestination(true);
 	},

@@ -7,10 +7,7 @@ pause menü,
 levelauswahl,
 fortschritt speichern
 
-bug: movement gleich nach portal verhindert fadeIn
 
-bug: spieler schiebt stein an, nachdem er auf pfeil getreten ist-> stein übernimmt Pfeil event und rollt bis Anstoß
-
-bug: stein animation endet nicht, wenn man direkt nach dem schieben weitergeht
+bug: portal event nicht triggern, wenn das andere blockiert wird(stein)
 
 change: animation bei eis ändern und Bewegung schneller machen
