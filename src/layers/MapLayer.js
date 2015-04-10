@@ -5,7 +5,7 @@ var MapLayer = cc.Layer.extend({
 		this.portals = [];
 		this.boulders = [];
 		
-		this.setScale(2);
+		//this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 
