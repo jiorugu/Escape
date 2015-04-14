@@ -238,12 +238,12 @@
  </tileset>
  <layer name="ground" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJyzZWBgEINiWyQ2jI+O2YBYB4p5kdggbEpAPTrWxWIPPvXY7EFXb0Ml9cjusoZiVqi8HBCrIonLIunD5n5yxG2hdvDhUc+IFo5iSG7BZz6hcFUlEoPUAgB04Re4
+   eJyzZWBgEINiWyQ2jI+O2YBYB4p5kdggbEpAPTrWxWIPPvXY7EFXz0Al9cjusoZiVqi8HBCrIonLIunD5n5yxG2hdvDhUc+IFo5iSG7BZz6hcFUlEoPUAgDTkhdA
   </data>
  </layer>
  <layer name="events" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPmEBpGSjNgketMppaEDDDox4mpwKlpZHY1ADCWMRUoBifu4gF2jjEKTGbEv/zQGlpKM1NgVnoAACkrQKr
+   eJxjYCAPmEBpGSjNgketMppaEDDDox4mpwKlpZHYhIANEWqEsahXgWJ87iIWaOMQp8RsYv2PDfBAaWkozU2BWegAAEX8AyM=
   </data>
  </layer>
  <objectgroup name="objects" width="0" height="0">

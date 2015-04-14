@@ -5,6 +5,7 @@ var Boulder = cc.Sprite.extend({
 		this.setAnchorPoint(0, 0);
 		cc.spriteFrameCache.addSpriteFrames(res.boulder_plist);
 		this.setSpriteFrame("boulder_0");
+		this.getTexture().setAliasTexParameters();
 		this.setPosition(posX, posY);
 	},
 

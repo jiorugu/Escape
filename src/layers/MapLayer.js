@@ -5,7 +5,7 @@ var MapLayer = cc.Layer.extend({
 		this.portals = [];
 		this.boulders = [];
 		
-		this.setScale(2);
+		//this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 
@@ -80,14 +80,14 @@ var MapLayer = cc.Layer.extend({
 		var objectGroup = this.tileMap.getObjectGroup("objects");
 		var objects = objectGroup.getObjects();
 		
-		//get Portals
+		//init portals and boulders
 		for (var i = 0; i < objects.length; i++) {
 			if(objects[i].name == "portal") {
 				this.initPortal(objects[i]);
 			} else if(objects[i].name == "rock") {
 				//TODO: change rock to boulder everywhere
 				this.initBoulder(objects[i]);
-			}
+			} 
 		}
 	},
 	
@@ -167,6 +167,12 @@ var MapLayer = cc.Layer.extend({
 			}
 		}
 		return null;
+	},
+
+	startCrumblyAnimation : function(pos) {
+		var crumblySprite = new Crumbly(pos.x, pos.y);
+		this.tileMap.addChild(crumblySprite, 0);
+		crumblySprite.runAction(crumblySprite.initAnimation());
 	},
 	
 	setViewPointCenter : function(pos) {

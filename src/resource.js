@@ -7,6 +7,8 @@ var res = {
     portal_plist : "res/animations/portal.plist",
     boulder_png : "res/animations/boulder.png",
     boulder_plist : "res/animations/boulder.plist",
+    crumbly_png : "res/animations/crumbly.png",
+    crumbly_plist : "res/animations/crumbly.plist",
     arrowLeft : "res/gui/arrowLeft.png",
     arrowRight : "res/gui/arrowRight.png",
     arrowDown : "res/gui/arrowDown.png",

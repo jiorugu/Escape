@@ -5,6 +5,7 @@ var Player = cc.Sprite.extend({
 		this.setAnchorPoint(0, 0);
 		cc.spriteFrameCache.addSpriteFrames(res.player_plist);
 		this.setSpriteFrame("player_down0");
+		this.getTexture().setAliasTexParameters();
 	},
 	
 	initAnimation : function(direction) {
