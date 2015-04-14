@@ -20,7 +20,19 @@ var LevelLayer = cc.Layer.extend({
 		//sprite to move (switching between player and boulder)
 		this.activeSprite = this.mapLayer.player;
 
+		//if yes -> check for wind direction updates
+		this.isWindMap = false;
+		this.checkForSpecialControlls();
+		
 		this.scheduleUpdate();
+	},
+	
+	checkForSpecialControlls : function() {
+		if(this.mapLayer.isWindMap()) {
+			this.isWindMap = true;
+			this.curWindDirection = "right";
+			this.hudLayer.controlLayer.initWindButton();
+		}
 	},
 
 	update : function(dt) {
@@ -29,6 +41,14 @@ var LevelLayer = cc.Layer.extend({
 		}
 		else if(this.isMoving == false){
 			this.checkForNewDestination(this.checkIfDirectionChanged());
+		}
+		
+		if(this.isWindMap) {
+			var newDirection = this.hudLayer.controlLayer.curWindDirection;
+			if(newDirection != this.curWindDirection) {
+				this.mapLayer.rotateWind();
+				this.curWindDirection = newDirection;
+			}
 		}
 	},
 
@@ -57,7 +77,6 @@ var LevelLayer = cc.Layer.extend({
 				this.activeSprite.stopAllActions();
 				this.activeSprite.runAction(animation);
 			}
-
 			var newPos = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
 
 			//Collision Detection
@@ -74,13 +93,13 @@ var LevelLayer = cc.Layer.extend({
 				this.curDestination = newPos;
 				this.isWalking = true;
 				this.isMoving = false;
-		
+
 				//Check if moving sprite walks away from a crumbly tile and trigger event
 				var currentPos = this.activeSprite.getPosition();
 				var currentGid = this.mapLayer.tileMap.getTileCoordForPos(currentPos);
 				if(this.mapLayer.tileMap.checkIfLeavingCrumblyTile(currentGid)){
 					this.mapLayer.startCrumblyAnimation(currentPos);
-				};
+				}
 			}
 		}
 	},
@@ -221,6 +240,10 @@ var LevelLayer = cc.Layer.extend({
 			this.stopSpriteWalking();
 			this.runArrowEvent();
 			break;
+		case "gust":
+			this.stopSpriteWalking();
+			this.runGustEvent();
+			break;
 		case "crumbly":
 			if(this.keepMoving) {
 				this.checkForNewDestination(false);
@@ -278,6 +301,12 @@ var LevelLayer = cc.Layer.extend({
 		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
 		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnGid(gid); 
 
+		//move player
+		this.checkForNewDestination(true);
+	},
+	
+	runGustEvent : function() {
+		this.curDirection = this.curWindDirection;
 		//move player
 		this.checkForNewDestination(true);
 	},

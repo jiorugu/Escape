@@ -4,8 +4,9 @@ var MapLayer = cc.Layer.extend({
 		
 		this.portals = [];
 		this.boulders = [];
+		this.windDirection = "right";
 		
-		//this.setScale(2);
+		this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 
@@ -84,10 +85,11 @@ var MapLayer = cc.Layer.extend({
 		for (var i = 0; i < objects.length; i++) {
 			if(objects[i].name == "portal") {
 				this.initPortal(objects[i]);
-			} else if(objects[i].name == "rock") {
-				//TODO: change rock to boulder everywhere
+			} else if(objects[i].name == "boulder") {
 				this.initBoulder(objects[i]);
-			} 
+			} else if(objects[i].name =="gust") {
+				this.initGust(objects[i]);
+			}
 		}
 	},
 	
@@ -106,6 +108,15 @@ var MapLayer = cc.Layer.extend({
 		var boulder = new Boulder(centerPosition.x, centerPosition.y);
 		this.tileMap.addChild(boulder, 2);
 		this.boulders.push(boulder);
+	},
+	
+	initGust : function(gust) {	
+		var position = cc.p(gust.x, gust.y);
+		var centerPosition = this.tileMap.centerPosition(position);
+		var tilePos = this.tileMap.getTileCoordForPos(centerPosition);
+		var gust = new Gust(centerPosition.x, centerPosition.y);
+		this.tileMap.addChild(gust, 3);
+		this.tileMap.gusts.push({"sprite":gust, "pos":tilePos});
 	},
 	
 	initPortalAnimation : function(position) {
@@ -128,6 +139,22 @@ var MapLayer = cc.Layer.extend({
 		portalSprite.setPosition(position);
 		this.tileMap.addChild(portalSprite, 1);
 		portalSprite.runAction(repeatAnimation);
+	},
+	
+	isWindMap : function() {
+		var property = this.tileMap.getProperty("wind");
+		if(property != null) {
+			this.windDirection = property;
+			return true;
+		}
+		return false;
+	},
+	
+	rotateWind : function() {
+		for(var i = 0; i < this.tileMap.gusts.length; i++) {
+			var sprite = this.tileMap.gusts[i].sprite;
+			sprite.runAction(new cc.RotateBy(0.2, 90));
+		}
 	},
 	
 	getPortalTagOnPosition : function(position) {

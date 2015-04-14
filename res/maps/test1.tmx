@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="12" height="12" tilewidth="16" tileheight="16">
+ <properties>
+  <property name="wind" value="true"/>
+ </properties>
  <tileset firstgid="1" name="tileset" tilewidth="16" tileheight="16">
   <image source="../tilesets/tileset.png" width="128" height="128"/>
   <tile id="0">
@@ -238,17 +241,17 @@
  </tileset>
  <layer name="ground" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJyzZWBgEINiWyQ2jI+O2YBYB4p5kdggbEpAPTrWxWIPPvXY7EFXz0Al9cjusoZiVqi8HBCrIonLIunD5n5yxG2hdvDhUc+IFo5iSG7BZz6hcFUlEoPUAgDTkhdA
+   eJyzZWBgEINiWyQ2OraFYjYg1oFiXiQ2MgYBUyzq0TEjVK0OkeqRMS71DFjUyuFwPy71pmh+toZiViTzVJHEZZH0YXM/OeK2UDv48KhnhNK6SPEkS4T5hMJUlUgMUgsASvgV6Q==
   </data>
  </layer>
  <layer name="events" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPmEBpGSjNgketMppaEDDDox4mpwKlpZHYhIANEWqEsahXgWJ87iIWaOMQp8RsYv2PDfBAaWkozU2BWegAAEX8AyM=
+   eJxjYCAPmEBpGSjNgketMppaEDDDox4mp4IkJk2ku2yIUCOMRb0KFONzF7FAG4c4JWarEFaCE/BAaVgYclNgFjoAAAwwAv8=
   </data>
  </layer>
  <objectgroup name="objects" width="0" height="0">
   <object name="spawn" x="80" y="16" width="20" height="18"/>
-  <object name="rock" x="144" y="128" width="19" height="18"/>
+  <object name="boulder" x="144" y="128" width="19" height="18"/>
   <object name="portal" x="112" y="112" width="20" height="19">
    <properties>
     <property name="tag" value="0"/>
@@ -259,7 +262,7 @@
     <property name="tag" value="0"/>
    </properties>
   </object>
-  <object name="rock" x="32" y="64" width="17" height="17"/>
+  <object name="boulder" x="32" y="64" width="17" height="17"/>
   <object name="portal" x="96" y="32" width="16" height="16">
    <properties>
     <property name="tag" value="1"/>
@@ -270,5 +273,7 @@
     <property name="tag" value="1"/>
    </properties>
   </object>
+  <object name="gust" x="128" y="32" width="16" height="16"/>
+  <object name="gust" x="144" y="16" width="16" height="16"/>
  </objectgroup>
 </map>

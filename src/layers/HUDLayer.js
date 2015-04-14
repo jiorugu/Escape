@@ -12,10 +12,10 @@ var HUDLayer = cc.Layer.extend({
 		var pauseButtonPos = cc.p(cc.winSize.width - 50, cc.winSize.height - 50);
 		
 		var pauseButton = ccui.Button();
-		cc.log(pauseButton.height);
 		pauseButton.setTouchEnabled(true);
 		pauseButton.setPressedActionEnabled(true);
 		pauseButton.loadTextures(res.pauseButton, res.arrowPressed, "");
+		pauseButton.setAnchorPoint(0, 0);
 		pauseButton.setPosition(pauseButtonPos);
 		pauseButton.addTouchEventListener(openPauseMenu, this);
 		this.addChild(pauseButton);

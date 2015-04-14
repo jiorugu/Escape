@@ -4,6 +4,7 @@ var TileMap = cc.TMXTiledMap.extend({
 		this.initWithTMXFile(mapFile);
 		
 		this.crumblies = {};
+		this.gusts = [];
 	},
 
 	getTileCoordForPos : function(pos) {
@@ -18,8 +19,8 @@ var TileMap = cc.TMXTiledMap.extend({
 	isCollidable : function(pos) {
 		var gid = this.getTileCoordForPos(pos);
 		if (gid) {
-			var tileID = this.getTileIDFromGid(gid.x, gid.y);
-			var tile = this.getTileGidFromPos("ground", gid);
+			var tileID = this.getTileIDforGid(gid);
+			var tile = this.getTileGidforPos("ground", gid);
 			var groundProperties = this.getPropertiesForGID(tile);
 			
 			//check for collide property
@@ -37,13 +38,19 @@ var TileMap = cc.TMXTiledMap.extend({
 
 	getEventOnGid : function(gid) {
 		if (gid) {
-			var tile = this.getTileGidFromPos("events", gid);
+			var tile = this.getTileGidforPos("events", gid);
 			var eventProperties = this.getPropertiesForGID(tile);
 
 			//check for collide property
 			if (eventProperties) {
 				if(eventProperties.event) {
 					return eventProperties.event;
+				}
+			}
+			
+			for(var i = 0; i < this.gusts.length; i++) {
+				if(this.gusts[i].pos.x == gid.x && this.gusts[i].pos.y == gid.y) {
+					return "gust";
 				}
 			}
 		}
@@ -72,21 +79,21 @@ var TileMap = cc.TMXTiledMap.extend({
 			var sprite = eventLayer.getTileAt(gid);
 			eventLayer.removeChild(sprite);
 			
-			var id = this.getTileIDFromGid(gid.x, gid.y);
+			var tileID = this.getTileIDforGid(gid);
 		
-			this.crumblies[id] = "collidable";
+			this.crumblies[tileID] = "collidable";
 			return true;
 		}
 		return false;
 	},
 	
-	getTileGidFromPos : function(layer, pos) {
+	getTileGidforPos : function(layer, pos) {
 		var layer = this.getLayer(layer);	
 		return tile = layer.getTileGIDAt(pos);
 	},
 	
-	getTileIDFromGid : function(gidX, gidY) {
-		var id = gidY * this._getMapWidth() + gidX;
+	getTileIDforGid : function(gid) {
+		var id = gid.y * this._getMapWidth() + gid.x;
 		return id;
 	},
 

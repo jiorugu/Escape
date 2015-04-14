@@ -4,6 +4,7 @@ var ControlLayer = cc.Layer.extend({
 		var size = cc.director.getWinSize();
 		this.initDPad();
 		this.curDirection = "idle";
+		this.curWindDirection = "right";
 	},
 	
 	buttonPressed : function(direction) {
@@ -74,5 +75,35 @@ var ControlLayer = cc.Layer.extend({
 			}
 		}, this);
 		this.addChild(rightButton);
+	},
+	
+	initWindButton : function() {
+		var windButton = ccui.Button();
+		windButton.setTouchEnabled(true);
+		windButton.setPressedActionEnabled(true);
+		windButton.loadTextureNormal(res.arrowRight, "");
+		//windButton.setAnchorPoint(0, 0);
+		windButton.setPosition(cc.winSize.width - 50, cc.winSize.height-100);
+		var that = this;
+		windButton.addTouchEventListener(function(sender, type){
+			//activate only on touch began
+			if(type == 0) {
+				if(sender.getNumberOfRunningActions() == 0) {
+					sender.runAction(new cc.RotateBy(0.2,90));
+					
+					//Set new direction
+					if(that.curWindDirection == "right") {
+						that.curWindDirection = "down";
+					} else if(that.curWindDirection == "down") {
+						that.curWindDirection = "left";
+					} else if(that.curWindDirection == "left") {
+						that.curWindDirection = "up";
+					} else if(that.curWindDirection == "up") {
+						that.curWindDirection = "right";
+					}
+				}
+			}
+		}, this);
+		this.addChild(windButton);
 	}
 });

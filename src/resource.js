@@ -9,6 +9,8 @@ var res = {
     boulder_plist : "res/animations/boulder.plist",
     crumbly_png : "res/animations/crumbly.png",
     crumbly_plist : "res/animations/crumbly.plist",
+    gust_png : "res/animations/gust.png",
+    gust_plist : "res/animations/gust.plist",
     arrowLeft : "res/gui/arrowLeft.png",
     arrowRight : "res/gui/arrowRight.png",
     arrowDown : "res/gui/arrowDown.png",
