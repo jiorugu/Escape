@@ -50,6 +50,12 @@ var LevelLayer = cc.Layer.extend({
 			if(newDirection != this.curWindDirection) {
 				this.mapLayer.rotateWind();
 				this.curWindDirection = newDirection;
+				
+				//Move player if currently standing on gust and direction changed
+				var playerPos = this.mapLayer.player.getPosition();
+				if(this.mapLayer.tileMap.getEventOnPos(playerPos) == "gust"){
+					this.runGustEvent();
+				}
 			}
 		}
 	},
