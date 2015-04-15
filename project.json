@@ -26,6 +26,7 @@
     "src/sprites/Boulder.js",
     "src/sprites/Crumbly.js",
     "src/sprites/Gust.js",
+    "src/sprites/Portal.js",
     "src/TileMap.js"
   ]
 }

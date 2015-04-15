@@ -96,16 +96,17 @@ var MapLayer = cc.Layer.extend({
 	initPortal : function(portal) {
 		var position = cc.p(portal.x, portal.y);
 		var centerPosition = this.tileMap.centerPosition(position);
+		
+		var portalSprite = new Portal(centerPosition);
+		this.tileMap.addChild(portalSprite, 1);
 		this.portals.push({"tag":portal.tag, "pos":centerPosition});
-		//Start Portal Animation
-		this.initPortalAnimation(centerPosition);
 	},
 	
 	initBoulder : function(boulder) {
 		var position = cc.p(boulder.x, boulder.y);
 		var centerPosition = this.tileMap.centerPosition(position);
 		
-		var boulder = new Boulder(centerPosition.x, centerPosition.y);
+		var boulder = new Boulder(centerPosition);
 		this.tileMap.addChild(boulder, 2);
 		this.boulders.push(boulder);
 	},
@@ -114,31 +115,9 @@ var MapLayer = cc.Layer.extend({
 		var position = cc.p(gust.x, gust.y);
 		var centerPosition = this.tileMap.centerPosition(position);
 		var tilePos = this.tileMap.getTileCoordForPos(centerPosition);
-		var gust = new Gust(centerPosition.x, centerPosition.y);
+		var gust = new Gust(centerPosition);
 		this.tileMap.addChild(gust, 3);
 		this.tileMap.gusts.push({"sprite":gust, "pos":tilePos});
-	},
-	
-	initPortalAnimation : function(position) {
-		//TODO: make own Portal Sprite class
-		cc.spriteFrameCache.addSpriteFrames(res.portal_plist);
-		var animFrames = [];
-		for (var i = 0; i < 3; i++) {
-			var str = "portal_" + i;
-			var frame = cc.spriteFrameCache.getSpriteFrame(str);
-			animFrames.push(frame);
-		}
-
-		var animation = new cc.Animation(animFrames, animationTime);
-		var repeatAnimation = cc.RepeatForever(new cc.Animate(animation));
-		
-		//get Sprite for GID
-		var portalSprite = cc.Sprite();
-		portalSprite.setAnchorPoint(0, 0);
-		portalSprite.setSpriteFrame("portal_0");
-		portalSprite.setPosition(position);
-		this.tileMap.addChild(portalSprite, 1);
-		portalSprite.runAction(repeatAnimation);
 	},
 	
 	isWindMap : function() {
@@ -197,7 +176,7 @@ var MapLayer = cc.Layer.extend({
 	},
 
 	startCrumblyAnimation : function(pos) {
-		var crumblySprite = new Crumbly(pos.x, pos.y);
+		var crumblySprite = new Crumbly(pos);
 		this.tileMap.addChild(crumblySprite, 0);
 		crumblySprite.runAction(crumblySprite.initAnimation());
 	},

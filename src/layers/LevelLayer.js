@@ -16,6 +16,8 @@ var LevelLayer = cc.Layer.extend({
 		this.isWalking = false;
 		this.curDestination;
 		this.curDirection;
+		//move 1 pixel per update
+		this.speed = 1;
 
 		//sprite to move (switching between player and boulder)
 		this.activeSprite = this.mapLayer.player;
@@ -78,7 +80,7 @@ var LevelLayer = cc.Layer.extend({
 				this.activeSprite.runAction(animation);
 			}
 			var newPos = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
-
+			
 			//Collision Detection
 			if(this.mapLayer.tileMap.isCollidable(newPos) || this.specialBoulderCollision(newPos)) {
 				this.stopSprite();
@@ -88,7 +90,7 @@ var LevelLayer = cc.Layer.extend({
 				} else {
 					this.stopSprite();
 				}
-			} else{
+			} else{ //No Collision
 				//Start new Sprite Movement
 				this.curDestination = newPos;
 				this.isWalking = true;
@@ -96,9 +98,19 @@ var LevelLayer = cc.Layer.extend({
 
 				//Check if moving sprite walks away from a crumbly tile and trigger event
 				var currentPos = this.activeSprite.getPosition();
-				var currentGid = this.mapLayer.tileMap.getTileCoordForPos(currentPos);
-				if(this.mapLayer.tileMap.checkIfLeavingCrumblyTile(currentGid)){
+				
+				if(this.mapLayer.tileMap.checkIfLeavingCrumblyTile(currentPos)){
 					this.mapLayer.startCrumblyAnimation(currentPos);
+				} 
+				
+				if(this.mapLayer.tileMap.checkIfLeavingIceTile(currentPos)) {
+					this.speed = 2;
+					if(!directionChanged) {
+						this.mapLayer.player.stopAllActions();
+					}
+				} else {
+					//walk on normal speed if not leaving ice tile
+					this.speed = 1;
 				}
 			}
 		}
@@ -111,14 +123,14 @@ var LevelLayer = cc.Layer.extend({
 
 		//X COORD
 		if (dest.x < playerPos.x) {
-			playerPos.x --; 
+			playerPos.x -= this.speed; 
 		} else if (dest.x > playerPos.x) {
-			playerPos.x ++;
+			playerPos.x += this.speed;
 		} //Y COORD
 		else if (dest.y < playerPos.y) {
-			playerPos.y --; 
+			playerPos.y -= this.speed; 
 		} else if (dest.y > playerPos.y) {
-			playerPos.y ++;
+			playerPos.y += this.speed;
 		}
 
 		this.activeSprite.setPosition(playerPos);
@@ -131,10 +143,8 @@ var LevelLayer = cc.Layer.extend({
 	},
 
 	endMoving : function() {
-		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
-		
 		//Get Event on current Tile
-		var event = this.mapLayer.tileMap.getEventOnGid(gid);
+		var event = this.mapLayer.tileMap.getEventOnPos(this.curDestination);
 
 		if(event == "noevent") {
 			if(this.keepMoving) {
@@ -233,7 +243,7 @@ var LevelLayer = cc.Layer.extend({
 			this.runTrampolineEvent();
 			break;
 		case "ice":
-			this.stopSpriteWalking();
+			//this.stopSpriteWalking();
 			this.runIceEvent();
 			break;
 		case "arrow":
@@ -298,8 +308,7 @@ var LevelLayer = cc.Layer.extend({
 		this.keepMoving = true;
 
 		//get direction
-		var gid = this.mapLayer.tileMap.getTileCoordForPos(this.curDestination);
-		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnGid(gid); 
+		this.curDirection = this.mapLayer.tileMap.getArrowDirectionOnPos(this.curDestination); 
 
 		//move player
 		this.checkForNewDestination(true);

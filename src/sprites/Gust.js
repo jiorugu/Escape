@@ -1,5 +1,5 @@
 var Gust = cc.Sprite.extend({
-	ctor : function(posX, posY) {
+	ctor : function(pos) {
 		this._super();
 		this.initWithFile("#gust_0.png");
 		cc.spriteFrameCache.addSpriteFrames(res.gust_plist);
@@ -7,9 +7,8 @@ var Gust = cc.Sprite.extend({
 		this.getTexture().setAliasTexParameters();
 		
 		var size = this.getContentSize();
-		console.log(size.width);
 		//Set sprite to midle of tile without anchorpoint
-		this.setPosition(posX + size.width / 2, posY + size.height / 2);
+		this.setPosition(pos.x + size.width / 2, pos.y + size.height / 2);
 		this.runAction(this.initAnimation());
 	},
 

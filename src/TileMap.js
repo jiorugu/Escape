@@ -17,10 +17,10 @@ var TileMap = cc.TMXTiledMap.extend({
 	},
 
 	isCollidable : function(pos) {
-		var gid = this.getTileCoordForPos(pos);
-		if (gid) {
-			var tileID = this.getTileIDforGid(gid);
-			var tile = this.getTileGidforPos("ground", gid);
+		var coord = this.getTileCoordForPos(pos);
+		if (coord) {
+			var tileID = this.getTileIDforCoord(coord);
+			var tile = this.getTileGidforCoord("ground", coord);
 			var groundProperties = this.getPropertiesForGID(tile);
 			
 			//check for collide property
@@ -36,9 +36,10 @@ var TileMap = cc.TMXTiledMap.extend({
 		return false;
 	},
 
-	getEventOnGid : function(gid) {
-		if (gid) {
-			var tile = this.getTileGidforPos("events", gid);
+	getEventOnPos : function(pos) {
+		var coord = this.getTileCoordForPos(pos);
+		if (coord) {
+			var tile = this.getTileGidforCoord("events", coord);
 			var eventProperties = this.getPropertiesForGID(tile);
 
 			//check for collide property
@@ -48,8 +49,9 @@ var TileMap = cc.TMXTiledMap.extend({
 				}
 			}
 			
+			//handle gusts objects as event
 			for(var i = 0; i < this.gusts.length; i++) {
-				if(this.gusts[i].pos.x == gid.x && this.gusts[i].pos.y == gid.y) {
+				if(this.gusts[i].pos.x == coord.x && this.gusts[i].pos.y == coord.y) {
 					return "gust";
 				}
 			}
@@ -57,10 +59,11 @@ var TileMap = cc.TMXTiledMap.extend({
 		return "noevent";
 	},
 
-	getArrowDirectionOnGid : function(gid) {
-		if (gid) {
+	getArrowDirectionOnPos : function(pos) {
+		var coord = this.getTileCoordForPos(pos);
+		if (coord) {
 			var eventLayer = this.getLayer("events");
-			var tile = eventLayer.getTileGIDAt(gid);
+			var tile = eventLayer.getTileGIDAt(coord);
 			var eventProperties = this.getPropertiesForGID(tile);
 
 			//check for collide property
@@ -73,13 +76,14 @@ var TileMap = cc.TMXTiledMap.extend({
 		return null;
 	},
 
-	checkIfLeavingCrumblyTile : function(gid) {
-		if(this.getEventOnGid(gid) == "crumbly") {
+	checkIfLeavingCrumblyTile : function(pos) {
+		var coord = this.getTileCoordForPos(pos);
+		if(this.getEventOnPos(pos) == "crumbly") {
 			var eventLayer = this.getLayer("events");
-			var sprite = eventLayer.getTileAt(gid);
+			var sprite = eventLayer.getTileAt(coord);
 			eventLayer.removeChild(sprite);
 			
-			var tileID = this.getTileIDforGid(gid);
+			var tileID = this.getTileIDforCoord(coord);
 		
 			this.crumblies[tileID] = "collidable";
 			return true;
@@ -87,13 +91,20 @@ var TileMap = cc.TMXTiledMap.extend({
 		return false;
 	},
 	
-	getTileGidforPos : function(layer, pos) {
+	checkIfLeavingIceTile : function(pos) {
+		if(this.getEventOnPos(pos) == "ice") {
+			return true;
+		}
+		return false;
+	},
+	
+	getTileGidforCoord : function(layer, pos) {
 		var layer = this.getLayer(layer);	
 		return tile = layer.getTileGIDAt(pos);
 	},
 	
-	getTileIDforGid : function(gid) {
-		var id = gid.y * this._getMapWidth() + gid.x;
+	getTileIDforCoord : function(coord) {
+		var id = coord.y * this._getMapWidth() + coord.x;
 		return id;
 	},
 

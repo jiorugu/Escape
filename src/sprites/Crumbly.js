@@ -1,12 +1,12 @@
 var Crumbly = cc.Sprite.extend({
-	ctor : function(posX, posY) {
+	ctor : function(pos) {
 		this._super();
 		this.initWithFile("#crumbly_0.png");
 		this.setAnchorPoint(0, 0);
 		cc.spriteFrameCache.addSpriteFrames(res.crumbly_plist);
 		this.setSpriteFrame("crumbly_0");
 		this.getTexture().setAliasTexParameters();
-		this.setPosition(posX, posY);
+		this.setPosition(pos.x, pos.y);
 	},
 
 	initAnimation : function() {
