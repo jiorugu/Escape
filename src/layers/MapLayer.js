@@ -4,6 +4,7 @@ var MapLayer = cc.Layer.extend({
 		
 		this.portals = [];
 		this.boulders = [];
+		this.switches = {};
 		this.windDirection = "right";
 		
 		this.setScale(2);
@@ -87,8 +88,12 @@ var MapLayer = cc.Layer.extend({
 				this.initPortal(objects[i]);
 			} else if(objects[i].name == "boulder") {
 				this.initBoulder(objects[i]);
-			} else if(objects[i].name =="gust") {
+			} else if(objects[i].name == "gust") {
 				this.initGust(objects[i]);
+			} else if(objects[i].name == "trapdoor") {
+				this.initTrapdoor(objects[i]);
+			} else if(objects[i].name == "switch") {
+				this.initSwitch(objects[i]);
 			}
 		}
 	},
@@ -99,25 +104,44 @@ var MapLayer = cc.Layer.extend({
 		
 		var portalSprite = new Portal(centerPosition);
 		this.tileMap.addChild(portalSprite, 1);
-		this.portals.push({"tag":portal.tag, "pos":centerPosition});
+		this.portals.push({"tag": portal.tag, "pos": centerPosition});
 	},
 	
 	initBoulder : function(boulder) {
 		var position = cc.p(boulder.x, boulder.y);
 		var centerPosition = this.tileMap.centerPosition(position);
 		
-		var boulder = new Boulder(centerPosition);
-		this.tileMap.addChild(boulder, 2);
-		this.boulders.push(boulder);
+		var boulderSprite = new Boulder(centerPosition);
+		this.tileMap.addChild(boulderSprite, 2);
+		this.boulders.push(boulderSprite);
 	},
 	
 	initGust : function(gust) {	
 		var position = cc.p(gust.x, gust.y);
 		var centerPosition = this.tileMap.centerPosition(position);
 		var tilePos = this.tileMap.getTileCoordForPos(centerPosition);
-		var gust = new Gust(centerPosition);
-		this.tileMap.addChild(gust, 3);
-		this.tileMap.gusts.push({"sprite":gust, "pos":tilePos});
+		var gustSprite = new Gust(centerPosition);
+		this.tileMap.addChild(gustSprite, 3);
+		this.tileMap.gusts.push({"sprite": gustSprite, "pos": tilePos});
+	},
+	
+	initTrapdoor : function(trapdoor) {
+		var position = cc.p(trapdoor.x, trapdoor.y);
+		var centerPosition = this.tileMap.centerPosition(position);
+		var tilePos = this.tileMap.getTileCoordForPos(centerPosition);
+		var trapdoorSprite = new Trapdoor(centerPosition, trapdoor.state, trapdoor.color);
+		this.tileMap.addChild(trapdoorSprite, 0);
+		this.tileMap.trapdoors.push({"sprite": trapdoorSprite, "pos": tilePos, "color":trapdoor.color});
+	},
+	
+	initSwitch : function(mySwitch) {
+		var tileCoord = this.tileMap.getTileCoordForPos(cc.p(mySwitch.x, mySwitch.y));
+		var tileID = this.tileMap.getTileIDforCoord(tileCoord);
+		this.switches[tileID] = mySwitch.color;
+		
+		var eventLayer = this.tileMap.getLayer("events");
+		var sprite = eventLayer.getTileAt(tileCoord);
+		sprite.setColor(cc.color(mySwitch.color));
 	},
 	
 	isWindMap : function() {
@@ -133,6 +157,16 @@ var MapLayer = cc.Layer.extend({
 		for(var i = 0; i < this.tileMap.gusts.length; i++) {
 			var sprite = this.tileMap.gusts[i].sprite;
 			sprite.runAction(new cc.RotateBy(0.2, 90));
+		}
+	},
+	
+	switchDoors : function(pos) {
+		var tileID = this.tileMap.getTileIDforCoord(this.tileMap.getTileCoordForPos(pos));
+		var switchColor = this.switches[tileID];
+		for(var i = 0; i < this.tileMap.trapdoors.length; i++) {
+			if(switchColor == this.tileMap.trapdoors[i].color) {
+				this.tileMap.trapdoors[i].sprite.runAnimation();
+			}
 		}
 	},
 	

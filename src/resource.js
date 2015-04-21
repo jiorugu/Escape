@@ -11,6 +11,8 @@ var res = {
     crumbly_plist : "res/animations/crumbly.plist",
     gust_png : "res/animations/gust.png",
     gust_plist : "res/animations/gust.plist",
+    trapdoor_png : "res/animations/trapdoor.png",
+    trapdoor_plist : "res/animations/trapdoor.plist",
     arrowLeft : "res/gui/arrowLeft.png",
     arrowRight : "res/gui/arrowRight.png",
     arrowDown : "res/gui/arrowDown.png",

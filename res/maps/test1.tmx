@@ -144,7 +144,6 @@
   <tile id="34">
    <properties>
     <property name="event" value="switch"/>
-    <property name="state" value="on"/>
    </properties>
   </tile>
   <tile id="35">
@@ -175,7 +174,6 @@
   <tile id="42">
    <properties>
     <property name="event" value="switch"/>
-    <property name="state" value="off"/>
    </properties>
   </tile>
   <tile id="44">
@@ -246,7 +244,7 @@
  </layer>
  <layer name="events" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPmEBpGSjNgketMppaEDDDox4mp4IkJk2ku2yIUCOMRb0KFONzF7FAG4c4JWarEFaCE/BAaVgYclNgFjoAAAwwAv8=
+   eJxjYCAPmEBpGSjNgketNppaEDDDox4mp40kJk2ku2yIVIeuXgWK8bmLWKCNQ5wSs1Uo0MsDpYkNQ1IAAAqkAvA=
   </data>
  </layer>
  <objectgroup name="objects" width="0" height="0">
@@ -275,5 +273,32 @@
   </object>
   <object name="gust" x="128" y="32" width="16" height="16"/>
   <object name="gust" x="144" y="16" width="16" height="16"/>
+  <object name="trapdoor" x="16" y="80" width="16" height="16">
+   <properties>
+    <property name="color" value="#ff0000"/>
+    <property name="state" value="0"/>
+   </properties>
+  </object>
+  <object name="trapdoor" x="80" y="160" width="16" height="16">
+   <properties>
+    <property name="color" value="#00ff00"/>
+    <property name="state" value="1"/>
+   </properties>
+  </object>
+  <object name="switch" x="16" y="32" width="16" height="16">
+   <properties>
+    <property name="color" value="#ff0000"/>
+   </properties>
+  </object>
+  <object name="switch" x="16" y="112" width="16" height="16">
+   <properties>
+    <property name="color" value="#00ff00"/>
+   </properties>
+  </object>
+  <object name="switch" x="48" y="48" width="16" height="16">
+   <properties>
+    <property name="color" value="#ff0000"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

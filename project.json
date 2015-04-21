@@ -27,6 +27,7 @@
     "src/sprites/Crumbly.js",
     "src/sprites/Gust.js",
     "src/sprites/Portal.js",
+    "src/sprites/Trapdoor.js",
     "src/TileMap.js"
   ]
 }

@@ -268,6 +268,9 @@ var LevelLayer = cc.Layer.extend({
 				this.stopSprite();
 			}
 			break;
+		case "switch":
+			this.runSwitchEvent();
+			break;
 		case "portal":
 			this.stopSpriteWalking();
 			this.runPortalEvent();
@@ -324,6 +327,17 @@ var LevelLayer = cc.Layer.extend({
 		this.curDirection = this.curWindDirection;
 		//move player
 		this.checkForNewDestination(true);
+	},
+	
+	runSwitchEvent : function() {
+		this.mapLayer.switchDoors(this.curDestination);
+		
+		if(this.keepMoving) {
+			this.checkForNewDestination(false);
+		}
+		else {
+			this.stopSprite();
+		}
 	},
 
 	runPortalEvent : function() {

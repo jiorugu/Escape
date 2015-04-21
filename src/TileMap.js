@@ -5,15 +5,8 @@ var TileMap = cc.TMXTiledMap.extend({
 		
 		this.crumblies = {};
 		this.gusts = [];
-	},
-
-	getTileCoordForPos : function(pos) {
-		var x = Math.floor(pos.x / this.getTileSize().width);
-		var y = Math.floor(((this.getTileSize().height * 
-				this.getMapSize().height) - pos.y) 
-				/ this.getTileSize().height);
-		//subtract by 1 -> workaround for cocos2d offset problem
-		return new cc.p(x, y-1);
+		// 1 = open, 0 = closed
+		this.trapdoors = [];
 	},
 
 	isCollidable : function(pos) {
@@ -31,6 +24,15 @@ var TileMap = cc.TMXTiledMap.extend({
 				}
 			} else if(this.crumblies[tileID] == "collidable") {
 				return true;
+			} else {
+				//check if colliding with open trapdoor
+				for(var i = 0; i < this.trapdoors.length; i++) {
+					if((this.trapdoors[i].pos.x == coord.x && this.trapdoors[i].pos.y == coord.y) 
+						&& this.trapdoors[i].sprite.state == DoorState.OPEN) 
+					{
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -106,6 +108,15 @@ var TileMap = cc.TMXTiledMap.extend({
 	getTileIDforCoord : function(coord) {
 		var id = coord.y * this._getMapWidth() + coord.x;
 		return id;
+	},
+
+	getTileCoordForPos : function(pos) {
+		var x = Math.floor(pos.x / this.getTileSize().width);
+		var y = Math.floor(((this.getTileSize().height * 
+				this.getMapSize().height) - pos.y) 
+				/ this.getTileSize().height);
+		//subtract by 1 -> workaround for cocos2d offset problem
+		return new cc.p(x, y-1);
 	},
 
 	centerPosition : function(pos) {
