@@ -19,6 +19,7 @@
     "src/layers/MainMenuLayer.js",
     "src/layers/MapLayer.js",
     "src/layers/PauseLayer.js",
+    "src/layers/LevelFinishedLayer.js",
     "src/scenes/LevelMenuScene.js",
     "src/scenes/LevelScene.js",
     "src/sprites/Player.js",

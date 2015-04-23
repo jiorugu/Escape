@@ -8,10 +8,13 @@ var LevelLayer = cc.Layer.extend({
 		this.pauseLayer = new PauseLayer(this);
 		this.dimLayer = new cc.LayerColor(cc.color(0,0,0,100));
 		this.dimLayer.setOpacity(0);
+		this.levelFinishedLayer = new LevelFinishedLayer();
 		this.addChild(this.mapLayer, 0);
 		this.addChild(this.hudLayer, 10);
-		this.addChild(this.dimLayer);
 		this.addChild(this.pauseLayer, 20);
+		this.addChild(this.dimLayer);
+		this.addChild(this.levelFinishedLayer);
+	
 		
 		//general player movement(walking + eventactions)
 		this.isMoving = false;
@@ -396,12 +399,16 @@ var LevelLayer = cc.Layer.extend({
 
 	runExitEvent : function() {
 		if(this.activeSprite == this.mapLayer.player) {
+			this.stopSprite();
 			this.pause();
 			this.mapLayer.pause();
 			this.hudLayer.controlLayer.children.forEach(function(child) {
 				child.setTouchEnabled(false);
 			});
-			this.stopSprite();
+			
+			this.dimLayer.setOpacity(100);
+			this.levelFinishedLayer.showMenu();
+			
 		} else {
 			this.stopSprite();
 		}
