@@ -2,11 +2,17 @@ var LevelLayer = cc.Layer.extend({
 	ctor : function(mapFile) {
 		//TODO: rename all player variables to activesprite
 		this._super();
+
 		this.mapLayer = new MapLayer(mapFile);
-		this.hudLayer = new HUDLayer();
+		this.hudLayer = new HUDLayer(this);
+		this.pauseLayer = new PauseLayer(this);
+		this.dimLayer = new cc.LayerColor(cc.color(0,0,0,100));
+		this.dimLayer.setOpacity(0);
 		this.addChild(this.mapLayer, 0);
 		this.addChild(this.hudLayer, 10);
-
+		this.addChild(this.dimLayer);
+		this.addChild(this.pauseLayer, 20);
+		
 		//general player movement(walking + eventactions)
 		this.isMoving = false;
 		//if true -> player moves until event or collision(arrow tiles)
@@ -390,10 +396,35 @@ var LevelLayer = cc.Layer.extend({
 
 	runExitEvent : function() {
 		if(this.activeSprite == this.mapLayer.player) {
-			//DEBUG
+			this.pause();
+			this.mapLayer.pause();
+			this.hudLayer.controlLayer.children.forEach(function(child) {
+				child.setTouchEnabled(false);
+			});
 			this.stopSprite();
 		} else {
 			this.stopSprite();
 		}
+	},
+	
+	pauseGame : function() {
+		this.pause();
+		this.mapLayer.pause();
+		this.hudLayer.controlLayer.children.forEach(function(child) {
+			child.setTouchEnabled(false);
+		});
+		
+		this.dimLayer.setOpacity(100);
+		this.pauseLayer.showMenu();
+	},
+	
+	resumeGame : function() {
+		this.pauseLayer.hideMenu();
+		this.resume();
+		this.mapLayer.resume();
+		this.hudLayer.controlLayer.children.forEach(function(child) {
+			child.setTouchEnabled(true);
+		});
+		this.dimLayer.setOpacity(0);
 	}
 });

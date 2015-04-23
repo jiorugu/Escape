@@ -1,14 +1,65 @@
 var ControlLayer = cc.Layer.extend({
-	ctor : function() {
+	ctor : function(levelLayer) {
 		this._super();
+		this.levelLayer = levelLayer;
 		var size = cc.director.getWinSize();
+		this.initPauseButton();
+		this.initKeyboardControl();
 		this.initDPad();
 		this.curDirection = "idle";
 		this.curWindDirection = "right";
 	},
 	
-	buttonPressed : function(direction) {
+	buttonPressed : function(direction, type) {
+		//TOUCH ENDED
+		if(type == 2) {
+			direction = "idle";
+		}
 		this.curDirection = direction;
+	},
+	
+	initPauseButton  : function() {
+		//TODO: change to relative position
+		var pauseButtonPos = cc.p(cc.winSize.width - 50, cc.winSize.height - 50);
+
+		var pauseButton = ccui.Button();
+		pauseButton.setTouchEnabled(true);
+		pauseButton.setPressedActionEnabled(true);
+		pauseButton.loadTextures(res.pauseButton, res.arrowPressed, "");
+		pauseButton.setAnchorPoint(0, 0);
+		pauseButton.setPosition(pauseButtonPos);
+		pauseButton.addTouchEventListener(this.openPauseMenu, this);
+		this.addChild(pauseButton);
+	},
+	
+	initKeyboardControl : function() {
+		if(cc.sys.capabilities.hasOwnProperty('keyboard')) {
+			var that = this;
+			cc.eventManager.addListener({
+				event: cc.EventListener.KEYBOARD,
+	
+				onKeyPressed : function(key, type) {
+					if(key == 40) {
+						that.buttonPressed("down");
+					} else if(key == 39) {
+						that.buttonPressed("right");
+					} else if(key == 38) {
+						that.buttonPressed("up");
+					} else if(key == 37) {
+						that.buttonPressed("left");
+					}
+				},
+				
+				onKeyReleased : function(key, type) {
+					if(that.curDirection == "down" && key == 40 ||
+						that.curDirection == "right" && key == 39 ||
+						that.curDirection == "up" && key == 38 ||
+						that.curDirection == "left" && key == 37) {
+						that.buttonPressed("idle");
+					}
+				}
+			}, this);
+		}
 	},
 
 	initDPad : function() {	
@@ -21,13 +72,8 @@ var ControlLayer = cc.Layer.extend({
 		upButton.setPressedActionEnabled(true);
 		upButton.loadTextures(res.arrowUp, res.arrowPressed, "");
 		upButton.setPosition(100, 150);
-		upButton.addTouchEventListener(function (sender, type) {
-			//TOUCH ENDED
-			if(type == 2) {
-				that.buttonPressed("idle");
-			} else {
-				that.buttonPressed("up");
-			}
+		upButton.addTouchEventListener(function (sender, type) {	
+			that.buttonPressed("up", type);
 		}, this);
 		this.addChild(upButton);
 		
@@ -37,12 +83,7 @@ var ControlLayer = cc.Layer.extend({
 		downButton.loadTextures(res.arrowDown, res.arrowPressed, "");
 		downButton.setPosition(100, 50);
 		downButton.addTouchEventListener(function (sender, type) {
-			//TOUCH ENDED
-			if(type == 2) {
-				that.buttonPressed("idle");
-			} else {
-				that.buttonPressed("down");
-			}
+			that.buttonPressed("down", type);
 		}, this);
 		this.addChild(downButton);
 		
@@ -52,12 +93,7 @@ var ControlLayer = cc.Layer.extend({
 		leftButton.loadTextures(res.arrowLeft, res.arrowPressed, "");
 		leftButton.setPosition(50, 100);
 		leftButton.addTouchEventListener(function (sender, type) {
-			//TOUCH ENDED
-			if(type == 2) {
-				that.buttonPressed("idle");
-			} else {
-				that.buttonPressed("left");
-			}
+			that.buttonPressed("left", type);
 		}, this);
 		this.addChild(leftButton);
 		
@@ -67,12 +103,7 @@ var ControlLayer = cc.Layer.extend({
 		rightButton.loadTextures(res.arrowRight, res.arrowPressed, "");
 		rightButton.setPosition(150, 100);
 		rightButton.addTouchEventListener(function (sender, type) {
-			//TOUCH ENDED
-			if(type == 2) {
-				that.buttonPressed("idle");
-			} else {
-				that.buttonPressed("right");
-			}
+			that.buttonPressed("right", type);
 		}, this);
 		this.addChild(rightButton);
 	},
@@ -105,5 +136,12 @@ var ControlLayer = cc.Layer.extend({
 			}
 		}, this);
 		this.addChild(windButton);
+	},
+	
+	openPauseMenu : function(sender, type) {
+		//activate only on touch began
+		if(type == 0) {
+			this.levelLayer.pauseGame();
+		}
 	}
 });
