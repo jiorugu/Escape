@@ -29,21 +29,16 @@ Levelanzahl:
 	Zum Freischalten muss man insgesamt eine bestimmte Menge an Levels fertig haben.
 	Levelanzahl wird angeteigt (z.B.:2/3)
 	Erstes Level: Beende das Level um weitere freizuschalten.
-
-
 	Zum zeigen, dass es gelockt ist, 
 	wird über die Gruppe ein Großes Feld mit einem Lock gestellt mit Sternen darauf.
-
 Levelende:
 	Glückwunschmenü: 
 		-> Return to Level Overwiev
-
 Achievments:
 	-> AFK = 15min AFK
 	-> No Game no Life = 10h gespielt
 	-> Furioser Stuhlgang = ??? Levels nacheinander geschafft
 	
 Selbst erstellte Spiele können erst hochgeladen werden, wenn der Spieler selbst die Map durchgespielt hat.
-
 
 5*3 + 100 Std
