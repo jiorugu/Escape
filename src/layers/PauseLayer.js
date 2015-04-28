@@ -11,13 +11,15 @@ var PauseLayer = cc.Layer.extend({
 		cc.MenuItemFont.setFontSize(60);
 
 		var menuItemReturnToGame = new cc.MenuItemFont("Resume", this.returnToGame, this);
+		var menuItemRestartLevel = new cc.MenuItemFont("Restart Level", this.restartLevel, this);
 		var menuItemReturnToLevelSelect = new cc.MenuItemFont("Return To Menu", returnToMenu, this);
 		
 		menuItemReturnToGame.setPosition(new cc.p(cc.winSize.width/2,cc.winSize.height/2+50));
-		menuItemReturnToLevelSelect.setPosition(new cc.p(cc.winSize.width/2, cc.winSize.height/2));
-
+		menuItemRestartLevel.setPosition(new cc.p(cc.winSize.width/2, cc.winSize.height/2));
+		menuItemReturnToLevelSelect.setPosition(new cc.p(cc.winSize.width/2, cc.winSize.height/2-50));
+				
 		//Applying Items to menu to scene
-		this.menu = new cc.Menu(menuItemReturnToGame, menuItemReturnToLevelSelect);
+		this.menu = new cc.Menu(menuItemReturnToGame, menuItemRestartLevel, menuItemReturnToLevelSelect);
 		this.menu.setPosition(new cc.p(0,0));
 		this.hideMenu();
 		this.addChild(this.menu);
@@ -35,9 +37,15 @@ var PauseLayer = cc.Layer.extend({
 	
 	returnToGame : function() {
 		this.levelLayer.resumeGame();
+	},
+	
+	restartLevel : function() {
+		this.levelLayer.pauseGame();
+		var mapFile = this.levelLayer.mapFile;
+		cc.director.replaceScene(new cc.TransitionFade(0.7,new LevelScene(mapFile)));
 	}
 });
 
 var returnToMenu = function() {
-	cc.director.replaceScene(new cc.Transition);
+	cc.director.replaceScene(new cc.TransitionFade(0.7,new LevelMenuScene()));
 }

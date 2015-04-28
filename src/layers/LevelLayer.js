@@ -3,6 +3,7 @@ var LevelLayer = cc.Layer.extend({
 		//TODO: rename all player variables to activesprite
 		this._super();
 
+		this.mapFile = mapFile;
 		this.mapLayer = new MapLayer(mapFile);
 		this.hudLayer = new HUDLayer(this);
 		this.pauseLayer = new PauseLayer(this);
@@ -293,7 +294,6 @@ var LevelLayer = cc.Layer.extend({
 	},
 
 	runTrampolineEvent : function() {
-		cc.log("tramp");
 		if(this.activeSprite == this.mapLayer.player) {
 			var directionPoint = this.getNextTileForCurrentDirection(2);
 			var newPos = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
