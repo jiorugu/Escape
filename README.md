@@ -31,7 +31,8 @@ Levelanzahl:
 	Erstes Level: Beende das Level um weitere freizuschalten.
 
 
-	Zum zeigen, dass es gelockt ist, wird über die Gruppe ein Großes Feld mit einem Lock gestellt mit Sternen darauf.
+	Zum zeigen, dass es gelockt ist, 
+	wird über die Gruppe ein Großes Feld mit einem Lock gestellt mit Sternen darauf.
 
 Levelende:
 	Glückwunschmenü: 
