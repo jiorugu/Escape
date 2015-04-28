@@ -87,7 +87,7 @@ var LevelLayer = cc.Layer.extend({
 
 		if(this.curDirection != "idle") {
 			//Get X and Y coordinates
-			var directionPoint = this.getNextTileForCurrentDirection();
+			var directionPoint = this.getNextTileForCurrentDirection(1);
 
 			var animation = this.activeSprite.initAnimation(this.curDirection);
 			if(directionChanged) {
@@ -218,18 +218,18 @@ var LevelLayer = cc.Layer.extend({
 			return false;
 	},
 
-	getNextTileForCurrentDirection : function() {
+	getNextTileForCurrentDirection : function(distance) {
 		var tileSize = this.mapLayer.tileMap.getTileSize(); 
 		var directionPoint;
 
 		if(this.curDirection == "up") {
-			directionPoint = cc.p(0,tileSize.height);
+			directionPoint = cc.p(0,tileSize.height * distance);
 		} else if(this.curDirection == "down") {
-			directionPoint = cc.p(0,-tileSize.height);
+			directionPoint = cc.p(0,-tileSize.height * distance);
 		} else if(this.curDirection == "left") {
-			directionPoint = cc.p(-tileSize.width, 0);
+			directionPoint = cc.p(-tileSize.width * distance, 0);
 		} else if(this.curDirection == "right") {
-			directionPoint = cc.p(tileSize.width, 0);
+			directionPoint = cc.p(tileSize.width * distance, 0);
 		}
 
 		return directionPoint;
@@ -241,7 +241,7 @@ var LevelLayer = cc.Layer.extend({
 		this.activeSprite = this.mapLayer.getBoulderAtPos(newPos);
 
 		//set tile behind boulder as destination
-		this.curDestination = cc.pAdd(newPos, this.getNextTileForCurrentDirection());
+		this.curDestination = cc.pAdd(newPos, this.getNextTileForCurrentDirection(1));
 
 		//keepMoving true would make the boulder move on after pushing it while being on the arrow event
 		this.keepMoving = false;
@@ -293,28 +293,40 @@ var LevelLayer = cc.Layer.extend({
 	},
 
 	runTrampolineEvent : function() {
+		cc.log("tramp");
 		if(this.activeSprite == this.mapLayer.player) {
-			var playerSize = this.activeSprite.getContentSize();
-
-			if(this.curDirection == "up") {
-				directionPoint = cc.p(0,playerSize.height * 2);
-			} else if(this.curDirection == "down") {
-				directionPoint = cc.p(0,-playerSize.height * 2);
-			} else if(this.curDirection == "left") {
-				directionPoint = cc.p(-playerSize.width * 2, 0);
-			} else if(this.curDirection == "right") {
-				directionPoint = cc.p(playerSize.width * 2, 0);
+			var directionPoint = this.getNextTileForCurrentDirection(2);
+			var newPos = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
+			if(this.mapLayer.tileMap.isCollidable(newPos) || this.mapLayer.collidesWithBoulder(newPos)) {
+				//check if tile next to trampoline is free
+				var directionPoint = this.getNextTileForCurrentDirection(1);
+				newPos = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
+				if(this.mapLayer.tileMap.isCollidable(newPos) || this.mapLayer.collidesWithBoulder(newPos)) {
+					//this.stopSprite();
+					this.curDestination = newPos;
+					this.runTrampolineAnimation(cc.p(0,0));
+					this.stopSpriteWalking();
+				} else {
+					this.curDestination = newPos;
+					this.runTrampolineAnimation(directionPoint);
+				}
+				
+			} else{		
+				this.curDestination = newPos;
+				this.runTrampolineAnimation(directionPoint);
 			}
-			this.curDestination = cc.pAdd(this.activeSprite.getPosition(), directionPoint);
-			var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
-			var scale = this.mapLayer.getScale();
-			var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
-			var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this));
-			this.activeSprite.runAction(sequence);
-			this.mapLayer.runAction(moveMapAction);
 		} else {
 			this.stopSprite();
 		}
+	},
+	
+	runTrampolineAnimation : function(directionPoint) {
+		var jumpByAction = cc.JumpBy(0.5, directionPoint, 15, 1);
+		var scale = this.mapLayer.getScale();
+		var moveMapAction = cc.MoveBy(0.5, -directionPoint.x*scale, -directionPoint.y*scale);
+		var sequence = cc.Sequence(jumpByAction, new cc.CallFunc(this.endMoving, this));
+		this.activeSprite.runAction(sequence);
+		this.mapLayer.runAction(moveMapAction);
 	},
 
 	runIceEvent : function() {
@@ -381,7 +393,7 @@ var LevelLayer = cc.Layer.extend({
 
 		//set player movement and current position
 		this.curDirection = data.direction;
-		var directionPoint = this.getNextTileForCurrentDirection();
+		var directionPoint = this.getNextTileForCurrentDirection(1);
 		this.curDestination = cc.pAdd(newPos, directionPoint);
 		this.activeSprite.setPosition(data.newPos);
 		this.mapLayer.runAction(sequence);

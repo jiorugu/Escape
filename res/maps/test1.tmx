@@ -239,7 +239,7 @@
  </tileset>
  <layer name="ground" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJyzZWBgEINiWyQ2OraFYjYg1oFiXiQ2MgYBUyzq0TEjVK0OkeqRMS71DFjUyuFwPy71pmh+toZiViTzVJHEZZH0YXM/OeK2UDv48KhnhNK6SPEkS4T5hMJUlUgMUgsASvgV6Q==
+   eJyzZWBgEINiWyQ2OraFYjYg1oFiXiQ2MgYBUyzq0bEeVK0OkeqR7cOlngGLPjkc7sel3hTNz9ZQzIpkniqSuCySPmzuJ0fcFmoHHx71jFBaFymeZIkwHxdGtpcYDFILAGmAFfc=
   </data>
  </layer>
  <layer name="events" width="12" height="12">
@@ -300,5 +300,6 @@
     <property name="color" value="#ff0000"/>
    </properties>
   </object>
+  <object name="boulder" x="128" y="48" width="16" height="16"/>
  </objectgroup>
 </map>
