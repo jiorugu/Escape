@@ -7,7 +7,7 @@ var MapLayer = cc.Layer.extend({
 		this.switches = {};
 		this.windDirection = "right";
 		
-		//this.setScale(2);
+		this.setScale(2);
 		this.initTileMap(mapFile);
 		this.initObjects();
 

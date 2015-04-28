@@ -39,5 +39,5 @@ var PauseLayer = cc.Layer.extend({
 });
 
 var returnToMenu = function() {
-	cc.director.replaceScene(new LevelMenuScene());
+	cc.director.replaceScene(new cc.Transition);
 }

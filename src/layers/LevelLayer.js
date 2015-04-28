@@ -47,25 +47,25 @@ var LevelLayer = cc.Layer.extend({
 	},
 
 	update : function(dt) {
-		if(this.isWalking) {
-			this.walkPlayerToDestination();
-		}
-		else if(this.isMoving == false){
-			this.checkForNewDestination(this.checkIfDirectionChanged());
-		}
-		
 		if(this.isWindMap) {
 			var newDirection = this.hudLayer.controlLayer.curWindDirection;
-			if(newDirection != this.curWindDirection) {
+			if(newDirection != this.curWindDirection && this.isWalking == false) {
 				this.mapLayer.rotateWind();
 				this.curWindDirection = newDirection;
-				
+
 				//Move player if currently standing on gust and direction changed
 				var playerPos = this.mapLayer.player.getPosition();
 				if(this.mapLayer.tileMap.getEventOnPos(playerPos) == "gust"){
 					this.runGustEvent();
 				}
 			}
+		}
+		
+		if(this.isWalking) {
+			this.walkPlayerToDestination();
+		}
+		else if(this.isMoving == false){
+			this.checkForNewDestination(this.checkIfDirectionChanged());
 		}
 	},
 
@@ -420,8 +420,8 @@ var LevelLayer = cc.Layer.extend({
 		this.hudLayer.controlLayer.children.forEach(function(child) {
 			child.setTouchEnabled(false);
 		});
-		
-		this.dimLayer.setOpacity(100);
+		var fadeIn = cc.FadeTo(0.2, 100);
+		this.dimLayer.runAction(fadeIn);
 		this.pauseLayer.showMenu();
 	},
 	
@@ -432,6 +432,7 @@ var LevelLayer = cc.Layer.extend({
 		this.hudLayer.controlLayer.children.forEach(function(child) {
 			child.setTouchEnabled(true);
 		});
-		this.dimLayer.setOpacity(0);
+		var fadeOut = cc.FadeTo(0.2, 0);
+		this.dimLayer.runAction(fadeOut);
 	}
 });
